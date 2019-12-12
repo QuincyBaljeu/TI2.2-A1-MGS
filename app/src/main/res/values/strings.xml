@@ -16,4 +16,12 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="navigation_name_map">Map</string>
+    <string name="navigation_name_locations">Locations</string>
+    <string name="navigation_name_help">Help</string>
+    <string name="navigation_name_settings">Settings</string>
+
 </resources>
