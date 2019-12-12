@@ -1,33 +1,65 @@
 package com.example.ti22_a1_mgs;
 
-import androidx.core.app.ActivityCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.ti22_a1_mgs.utils.MapUtil;
+import com.example.ti22_a1_mgs.utils.PopupUtil;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,
+        DialogInterface.OnClickListener
+{
 
     private static final String TAG = MapsActivity.class.getSimpleName();
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 75;
+    public static final LatLngBounds LAT_LNG_BOUNDS =
+            new LatLngBounds(
+                    new LatLng(51.645891, 5.038042),
+                    new LatLng(51.654991, 5.060769)
+            );
 
     private GoogleMap mMap;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        checkLocationPermission();
+        boolean success = MapUtil.checkLocationPermission(this);
+
+        if (success) {
+            if (fusedLocationClient == null) {
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            }
+        } else {
+            PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -39,40 +71,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        MapUtil.setMapStyling(this, mMap);
+        MapUtil.setMapSettings(mMap);
+        MapUtil.initializeMapCamera(mMap);
     }
 
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
 
-            // Asking user if explanation is needed
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-                //Prompt the user once explanation has been shown
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        //NOT IMPLEMENTED YET
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
 }
