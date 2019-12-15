@@ -34,7 +34,7 @@ public class MapUtil {
                     new LatLng(51.654991, 5.060769)
             );
 
-    private static final float DEFAULT_CAMERA_ZOOM = 12.0f;
+    private static final float DEFAULT_CAMERA_ZOOM = 15.0f;
 
 
     public static void setMapStyling(Activity activity, GoogleMap googleMap) {
@@ -57,7 +57,7 @@ public class MapUtil {
 
     public static void initializeMapCamera(GoogleMap googleMap) {
         googleMap.setMinZoomPreference(DEFAULT_CAMERA_ZOOM);
-        googleMap.setLatLngBoundsForCameraTarget(LAT_LNG_BOUNDS);
+//        googleMap.setLatLngBoundsForCameraTarget(LAT_LNG_BOUNDS);
     }
 
     public static void setMapSettings(GoogleMap googleMap) {

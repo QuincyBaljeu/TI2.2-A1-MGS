@@ -1,14 +1,24 @@
 package com.example.ti22_a1_mgs;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.RoutingListener;
 import com.example.ti22_a1_mgs.utils.LocationUtil;
 import com.example.ti22_a1_mgs.utils.MapUtil;
 import com.example.ti22_a1_mgs.utils.PopupUtil;
 
+import com.example.ti22_a1_mgs.utils.RouteUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -17,12 +27,20 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, DialogInterface.OnClickListener {
+        LocationListener,
+        DialogInterface.OnClickListener,
+        RoutingListener,
+        View.OnClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -37,6 +55,8 @@ public class MapsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        (findViewById(R.id.action_bar_button)).setOnClickListener(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -61,21 +81,18 @@ public class MapsActivity extends AppCompatActivity
         boolean success = LocationUtil.checkLocationPermission(this);
 
         if (success) {
-            buildGoogleApiClient();
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            googleApiClient.connect();
+
             MapUtil.setMapSettings(map);
             MapUtil.initializeMapCamera(map);
         } else {
             PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        googleApiClient.connect();
     }
 
     @Override
@@ -106,6 +123,42 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        //NOT IMPLEMENTED YET
+        //NOT IMPLEMENTED YET AND TESTING PURPOSES
+    }
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        Log.d(TAG, e.getMessage());
+    }
+
+    @Override
+    public void onRoutingStart() {
+        Log.d(TAG, "Routing started!");
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex) {
+        Log.d(TAG, "Routing succes!");
+
+        //add route(s) to the map.
+        for (int i = 0; i < routeArrayList.size(); i++) {
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(ContextCompat.getColor(this, R.color.colorAccent));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(routeArrayList.get(i).getPoints());
+            Polyline polyline = map.addPolyline(polyOptions);
+            RouteUtil.addToList(polyline);
+        }
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+        Log.d(TAG, "Routing Cancelled!");
+    }
+
+    @Override
+    public void onClick(View view) {
+        RouteUtil.buildRoutingRequest(this, MapUtil.getLatLngFromLocation(currentLocation), new LatLng(51.571915, 4.768323), this);
     }
 }
