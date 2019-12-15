@@ -20,48 +20,25 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import static com.example.ti22_a1_mgs.MapsActivity.LAT_LNG_BOUNDS;
-import static com.example.ti22_a1_mgs.MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION;
 
 public class MapUtil {
 
     private static final String TAG = MapUtil.class.getSimpleName();
 
-    public static boolean checkLocationPermission(Activity activity) {
-        if (ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+    private static final LatLngBounds LAT_LNG_BOUNDS =
+            new LatLngBounds(
+                    new LatLng(51.645891, 5.038042),
+                    new LatLng(51.654991, 5.060769)
+            );
 
-            // Asking user if explanation is needed
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-                //Prompt the user once explanation has been shown
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
+    private static final float DEFAULT_CAMERA_ZOOM = 12.0f;
 
 
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static void setMapStyling(Activity activity, GoogleMap googleMap){
+    public static void setMapStyling(Activity activity, GoogleMap googleMap) {
+        //custom
         try {
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -73,22 +50,31 @@ public class MapUtil {
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
+
+        //standard
+//        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 
-    public static void initializeMapCamera(GoogleMap googleMap){
-        googleMap.setMinZoomPreference(8.0f);
-//        googleMap.setLatLngBoundsForCameraTarget(LAT_LNG_BOUNDS);
+    public static void initializeMapCamera(GoogleMap googleMap) {
+        googleMap.setMinZoomPreference(DEFAULT_CAMERA_ZOOM);
+        googleMap.setLatLngBoundsForCameraTarget(LAT_LNG_BOUNDS);
     }
 
-    public static void setMapSettings(GoogleMap googleMap){
+    public static void setMapSettings(GoogleMap googleMap) {
         UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
-        settings.setTiltGesturesEnabled(true);
         settings.setMyLocationButtonEnabled(true);
         settings.setCompassEnabled(true);
+
+        googleMap.setMyLocationEnabled(true);
     }
 
-    public static void updateCamera(GoogleMap googleMap, LatLng latLng){
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    public static LatLng getLatLngFromLocation(Location location) {
+        return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public static void moveCamera(GoogleMap googleMap, LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 }

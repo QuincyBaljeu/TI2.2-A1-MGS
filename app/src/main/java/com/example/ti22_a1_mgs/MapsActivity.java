@@ -1,90 +1,111 @@
 package com.example.ti22_a1_mgs;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
-import android.Manifest;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 
+import com.example.ti22_a1_mgs.utils.LocationUtil;
 import com.example.ti22_a1_mgs.utils.MapUtil;
 import com.example.ti22_a1_mgs.utils.PopupUtil;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback,
-        DialogInterface.OnClickListener
-{
+public class MapsActivity extends AppCompatActivity
+        implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, DialogInterface.OnClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 75;
-    public static final LatLngBounds LAT_LNG_BOUNDS =
-            new LatLngBounds(
-                    new LatLng(51.645891, 5.038042),
-                    new LatLng(51.654991, 5.060769)
-            );
+    private GoogleMap map;
+    private GoogleApiClient googleApiClient;
+    private Location currentLocation;
+    private LocationRequest locationRequest;
 
-    private GoogleMap mMap;
-    private FusedLocationProviderClient fusedLocationClient;
+    //TODO migrate to FusedLocationProvider
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        boolean success = MapUtil.checkLocationPermission(this);
-
-        if (success) {
-            if (fusedLocationClient == null) {
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-            }
-        } else {
-            PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
-        }
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+    public void onPause() {
+        super.onPause();
 
-        MapUtil.setMapStyling(this, mMap);
-        MapUtil.setMapSettings(mMap);
-        MapUtil.initializeMapCamera(mMap);
+        //stop location updates when Activity is no longer active
+        if (googleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        }
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        MapUtil.setMapStyling(this, map);
+
+        boolean success = LocationUtil.checkLocationPermission(this);
+
+        if (success) {
+            buildGoogleApiClient();
+            MapUtil.setMapSettings(map);
+            MapUtil.initializeMapCamera(map);
+        } else {
+            PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
+        }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        locationRequest = LocationUtil.getNewLocationRequest();
+
+        boolean success = LocationUtil.checkLocationPermission(this);
+
+        if (success) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        PopupUtil.showNotification(this, "ERROR", "Your connection is suspended!", this);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        PopupUtil.showNotification(this, "ERROR " + connectionResult.getErrorCode(), connectionResult.getErrorMessage(), this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
+    }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         //NOT IMPLEMENTED YET
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
 }
