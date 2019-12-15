@@ -159,6 +159,6 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        RouteUtil.buildRoutingRequest(this, MapUtil.getLatLngFromLocation(currentLocation), new LatLng(51.571915, 4.768323), this);
+        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation), new LatLng(51.571915, 4.768323), this);
     }
 }
