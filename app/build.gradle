@@ -14,6 +14,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue "string", "MGS_API_MAPS_KEY", localCustomProperties['mgs.api.maps.key']
+        resValue "string", "MGS_API_MAPS_DIRECTIONS_KEY", localCustomProperties['mgs.api.maps.directions.key']
     }
     buildTypes {
         release {

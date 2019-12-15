@@ -65,6 +65,7 @@ public class MapUtil {
         settings.setZoomControlsEnabled(true);
         settings.setMyLocationButtonEnabled(true);
         settings.setCompassEnabled(true);
+        settings.setAllGesturesEnabled(true);
 
         googleMap.setMyLocationEnabled(true);
     }
