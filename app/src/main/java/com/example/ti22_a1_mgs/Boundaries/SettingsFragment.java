@@ -28,7 +28,7 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 Log.d("@/d", "Preference changed");
-                return false;
+                return true;
             }
         });
 
@@ -36,7 +36,9 @@ public class SettingsFragment extends PreferenceFragment {
         satellitePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                return false;
+                boolean toggle = Boolean.valueOf(newValue.toString());
+                Log.d("@/d", String.valueOf(toggle));
+                return true;
             }
         });
 
@@ -44,7 +46,9 @@ public class SettingsFragment extends PreferenceFragment {
         colorblindPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                return false;
+                boolean toggle = Boolean.valueOf(newValue.toString());
+                Log.d("@/d", String.valueOf(toggle));
+                return true;
             }
         });
     }
