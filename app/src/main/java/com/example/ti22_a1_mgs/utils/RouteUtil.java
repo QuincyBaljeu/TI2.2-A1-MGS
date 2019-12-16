@@ -19,7 +19,7 @@ public class RouteUtil {
 
     private static List<Polyline> polylines = new ArrayList<>();
 
-    public static void routingWaypointRequest(Context context, LatLng start, LatLng end, RoutingListener routingListener) {
+    public static synchronized void routingWaypointRequest(Context context, LatLng start, LatLng end, RoutingListener routingListener) {
         String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
 
         CustomRouting routing = new CustomRouting.Builder()
@@ -31,7 +31,7 @@ public class RouteUtil {
         routing.execute();
     }
 
-    public static void routingWaypointsRequest(Context context, List<LatLng> waypointList, RoutingListener routingListener) {
+    public static synchronized void routingWaypointsRequest(Context context, List<LatLng> waypointList, RoutingListener routingListener) {
         String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
 
         CustomRouting routing = new CustomRouting.Builder()

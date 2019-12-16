@@ -1,12 +1,23 @@
 package com.example.ti22_a1_mgs;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -16,6 +27,7 @@ import com.directions.route.RouteException;
 import com.directions.route.RoutingListener;
 import com.example.ti22_a1_mgs.utils.LocationUtil;
 import com.example.ti22_a1_mgs.utils.MapUtil;
+import com.example.ti22_a1_mgs.utils.MarkerUtil;
 import com.example.ti22_a1_mgs.utils.PopupUtil;
 
 import com.example.ti22_a1_mgs.utils.RouteUtil;
@@ -25,13 +37,24 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
@@ -40,7 +63,9 @@ public class MapsActivity extends AppCompatActivity
         LocationListener,
         DialogInterface.OnClickListener,
         RoutingListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        Target,
+        GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -89,7 +114,9 @@ public class MapsActivity extends AppCompatActivity
             googleApiClient.connect();
 
             MapUtil.setMapSettings(map);
-            MapUtil.initializeMapCamera(map);
+//            MapUtil.initializeMapCamera(map);
+
+            map.setOnInfoWindowClickListener(this);
         } else {
             PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
@@ -159,6 +186,48 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation), new LatLng(51.571915, 4.768323), this);
+//        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation), new LatLng(51.571915, 4.768323), this);
+
+        latLngList.add(MapUtil.getLatLngFromLocation(currentLocation));
+        latLngList.add(new LatLng(51.571915, 4.768323));
+        latLngList.add(new LatLng(51.53083, 4.46528));
+
+        RouteUtil.routingWaypointsRequest(this, latLngList, this);
+
+        final String imageUrl = "https://blindwalls.gallery/wp-content/uploads/2019/04/2015.09.23_GDFB_RUTGER_TERMOHLEN_Ralph_Roelse_Breda_NL_009-2000x1333.jpg";
+
+        //later you can use marker object
+        for (int i = 0; i < latLngList.size(); i++) {
+            pos = i;
+            MarkerUtil.getIconImage(imageUrl, MapsActivity.this);
+        }
+    }
+
+    private List<LatLng> latLngList = new ArrayList<>();
+    private int pos = 0;
+
+    @Override
+    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+        Log.d(TAG, "Bitmap loaded");
+        MarkerOptions tempMarker = new MarkerOptions()
+                .position(latLngList.get(pos))
+                .title("Waypoint " + pos)
+                .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+
+        map.addMarker(tempMarker);
+    }
+
+    @Override
+    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+        Log.e(TAG, e.getMessage());
+    }
+
+    @Override
+    public void onPrepareLoad(Drawable placeHolderDrawable) {
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.d(TAG, "Clicked on marker: " + marker.getTitle());
     }
 }

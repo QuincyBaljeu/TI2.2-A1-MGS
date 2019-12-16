@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "waypoint_table")
 public class Waypoint {
 
-    @PrimaryKey
+    @PrimaryKey @Nullable
     private int number;
 
     private double lat;
@@ -16,11 +16,6 @@ public class Waypoint {
     private boolean visited;
     @ForeignKey(entity = PointOfInterest.class, parentColumns = "pointOfInterestId", childColumns = "pointOfInterestId")
     private int pointOfInterestId;
-
-
-    public Waypoint(int number, double lat, double lon) {
-        this(number, lat, lon, -1);
-    }
 
     public Waypoint(int number, double lat, double lon, int pointOfInterestId) {
         this.number = number;

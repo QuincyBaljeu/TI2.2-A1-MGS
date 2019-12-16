@@ -34,7 +34,7 @@ public class MapUtil {
                     new LatLng(51.654991, 5.060769)
             );
 
-    private static final float DEFAULT_CAMERA_ZOOM = 12.0f;
+    private static final float DEFAULT_CAMERA_ZOOM = 15.0f;
 
 
     public static void setMapStyling(Activity activity, GoogleMap googleMap) {
@@ -56,7 +56,7 @@ public class MapUtil {
     }
 
     public static void initializeMapCamera(GoogleMap googleMap) {
-        googleMap.setMinZoomPreference(DEFAULT_CAMERA_ZOOM);
+//        googleMap.setMinZoomPreference(DEFAULT_CAMERA_ZOOM);
 //        googleMap.setLatLngBoundsForCameraTarget(LAT_LNG_BOUNDS);
     }
 
@@ -74,8 +74,8 @@ public class MapUtil {
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
 
-    public static void moveCamera(GoogleMap googleMap, LatLng latLng, float zoom) {
+    public static void moveCamera(GoogleMap googleMap, LatLng latLng) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_CAMERA_ZOOM));
     }
 }
