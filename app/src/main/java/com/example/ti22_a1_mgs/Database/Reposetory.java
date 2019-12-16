@@ -11,6 +11,7 @@ import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.Database.entities.WaypointDao;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class Reposetory {
@@ -38,19 +39,23 @@ public class Reposetory {
     }
 
     public void inset(PointOfInterest pointOfInterest) {
-        new InsertPointOfInterestAsyncTask(this.pointOfInterestDao).doInBackground(pointOfInterest);
+        new InsertPointOfInterestAsyncTask(this.pointOfInterestDao).execute(pointOfInterest);
     }
 
     public void update(PointOfInterest pointOfInterest) {
-        new UpdatePointOfInterestAsyncTask(this.pointOfInterestDao).doInBackground(pointOfInterest);
+        new UpdatePointOfInterestAsyncTask(this.pointOfInterestDao).execute(pointOfInterest);
     }
 
     public void delete(PointOfInterest pointOfInterest) {
-        new DeletePointOfInterestAsyncTask(this.pointOfInterestDao).doInBackground(pointOfInterest);
+        new DeletePointOfInterestAsyncTask(this.pointOfInterestDao).execute(pointOfInterest);
     }
 
     public void deleteAllPointsOfInterest() {
-        new DeleteAllPointsOfInterestAsyncTask(this.pointOfInterestDao).doInBackground();
+        new DeleteAllPointsOfInterestAsyncTask(this.pointOfInterestDao).execute();
+    }
+
+    public LiveData<List<PointOfInterest>> getPointOfInterestByLocation(String location) throws ExecutionException, InterruptedException {
+        return new GetPointOfInterestByLocationName(this.pointOfInterestDao).execute(location).get();
     }
 
     private static class InsertPointOfInterestAsyncTask extends AsyncTask<PointOfInterest, Void, Void> {
@@ -110,6 +115,19 @@ public class Reposetory {
         protected Void doInBackground(Void... Voids) {
             this.pointOfInterestDao.deleteAllPointsOfInterest();
             return null;
+        }
+    }
+
+    private static class GetPointOfInterestByLocationName extends AsyncTask<String, Void, LiveData<List<PointOfInterest>>>{
+        private PointOfInterestDao pointOfInterestDao;
+
+        public GetPointOfInterestByLocationName(PointOfInterestDao pointOfInterestDao) {
+            this.pointOfInterestDao = pointOfInterestDao;
+        }
+
+        @Override
+        protected LiveData<List<PointOfInterest>> doInBackground(String... strings) {
+            return pointOfInterestDao.findPointOfInterestByName(strings[0]);
         }
     }
 

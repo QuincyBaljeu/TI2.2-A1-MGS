@@ -1,6 +1,7 @@
 package com.example.ti22_a1_mgs.Database;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,6 +11,7 @@ import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class RouteViewModel extends AndroidViewModel {
 
@@ -61,4 +63,21 @@ public class RouteViewModel extends AndroidViewModel {
     }
 
     public void deleteAllPointsOfInterest() {this. repository.deleteAllPointsOfInterest();}
+
+    public LiveData<List<PointOfInterest>> getPointOfInterestByLocationName(String locationName) {
+        LiveData<List<PointOfInterest>> pointOfInterest = null;
+        try {
+            pointOfInterest = this.repository.getPointOfInterestByLocation(locationName);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (pointOfInterest == null) {
+            Log.wtf("RouteViewModel", "CouldntFind PointOfInterestByLocationName, reteurning null");
+            pointOfInterest = new LiveData<List<PointOfInterest>>() {
+            };
+        }
+        return pointOfInterest;
+    }
 }
