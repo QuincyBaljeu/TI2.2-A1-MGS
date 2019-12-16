@@ -8,28 +8,28 @@ import androidx.room.PrimaryKey;
 import java.util.ArrayList;
 
 @Entity(tableName = "point_of_interest_table"
-        , indices = {@Index("location")})
+        , indices = {@Index("id")})
 public class PointOfInterest {
 
     @PrimaryKey @NonNull
-    private String location;
+    private int id;
     private String nlDescription;
     private String enDescription;
     private ArrayList<String> imgUrls;
 
-    public PointOfInterest(String location, String nlDescription, String enDescription, ArrayList<String> imgUrls) {
-        this.location = location;
+    public PointOfInterest(int id, String nlDescription, String enDescription, ArrayList<String> imgUrls) {
+        this.id = id;
         this.nlDescription = nlDescription;
         this.enDescription = enDescription;
         this.imgUrls = imgUrls;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getLocation() {
-        return location;
+    public int getId() {
+        return id;
     }
 
     public String getNlDescription() {
@@ -47,7 +47,7 @@ public class PointOfInterest {
     @Override
     public String toString() {
         return "PointOfInterest{" +
-                "location='" + location + '\'' +
+                "id='" + id + '\'' +
                 ", nlDescription='" + nlDescription + '\'' +
                 ", enDescription='" + enDescription + '\'' +
                 ", imgUrls=" + imgUrls +

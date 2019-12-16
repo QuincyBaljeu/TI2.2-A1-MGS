@@ -71,26 +71,32 @@ public class MapsActivity extends AppCompatActivity
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
 
-//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
-//            @Override
-//            public void onChanged(List<Waypoint> waypoints) {
-//                //stuff that needs to happen when list is edited
-//                for (Waypoint waypoint : waypoints) {
+//        this.viewModelThing.deleteAllDatabaseContents();
+
+
+//        this.viewModelThing.fillDatabaseFromData(
+//                this.viewModelThing.getBlindWallsBreda().getAllWalls(), this
+//        );
+
+        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+            @Override
+            public void onChanged(List<Waypoint> waypoints) {
+                //stuff that needs to happen when list is edited
+                for (Waypoint waypoint : waypoints) {
 //                    Log.wtf(TAG, waypoint.toString());
-//                    printPointOfInterest(waypoint);
-//                }
-//            }
-//        });
-//
-//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
-//            @Override
-//            public void onChanged(List<PointOfInterest> pointOfInterests) {
-//                //stuff that needs to happen when list is edited
-//                for (PointOfInterest pointOfInterest : pointOfInterests) {
+                }
+            }
+        });
+
+        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
+            @Override
+            public void onChanged(List<PointOfInterest> pointOfInterests) {
+                //stuff that needs to happen when list is edited
+                for (PointOfInterest pointOfInterest : pointOfInterests) {
 //                    Log.wtf(TAG, pointOfInterest.toString());
-//                }
-//            }
-//        });
+                }
+            }
+        });
     }
 
 //    private void printPointOfInterest(Waypoint waypoint) {

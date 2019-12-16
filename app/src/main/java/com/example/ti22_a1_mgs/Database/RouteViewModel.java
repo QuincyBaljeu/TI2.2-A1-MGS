@@ -4,7 +4,6 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -22,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 
 public class RouteViewModel extends AndroidViewModel {
 
+    private static final String TAG = "RouteViewModel";
+
     private Reposetory repository;
     private BlindWallsBreda blindWallsBreda;
     private LiveData<List<Waypoint>> allWayPoints;
@@ -37,40 +38,40 @@ public class RouteViewModel extends AndroidViewModel {
         this.allPointsOfInterest = repository.getAllPointsOfInterest();
     }
 
-    private void fillDatabaseFromData(final List<BlindWall> blindWalls, LifecycleOwner observer)
-    {
-        for (final BlindWall wall : blindWalls)
-        {
-            repository.inset(new PointOfInterest(
-                    wall.getAddress(),
+    public void deleteAllDatabaseContents() {
+        Log.wtf(TAG, "########WARNING DELETING ALL DATABASE CONTENTS#########");
+        this.repository.deleteAllPointsOfInterest();
+        this.repository.deleteAllWaypoints();
+    }
+
+    public void fillDatabaseFromData(final List<BlindWall> blindWalls, LifecycleOwner observer) {
+        for (final BlindWall wall : blindWalls) {
+            repository.insert(new PointOfInterest(
+                    wall.getWallId(),
                     wall.getDescriptionDutch(),
                     wall.getDescriptionEnglish(),
                     (ArrayList<String>) wall.getImagesUrls()));
-            try {
-                repository.getPointOfInterestByLocation(wall.getAddress()).observe(observer, new Observer<List<PointOfInterest>>() {
-                    @Override
-                    public void onChanged(List<PointOfInterest> pointOfInterests) {
-                        for (PointOfInterest pointOfInterest : pointOfInterests) {
-                            if (pointOfInterest.getLocation().equals(wall.getAddress())) {
-                                repository.inset(new Waypoint(
-                                        blindWalls.indexOf(wall),
-                                        wall.getLatitude(),
-                                        wall.getLongitude(),
-                                        pointOfInterest.getLocation()));
-                            }
+
+            getPointOfInterestByLocationName(wall.getWallId()).observe(observer, new Observer<List<PointOfInterest>>() {
+                @Override
+                public void onChanged(List<PointOfInterest> pointOfInterests) {
+                    for (PointOfInterest pointOfInterest : pointOfInterests) {
+                        if (pointOfInterest.getId() == wall.getWallId()) {
+                            repository.insert(new Waypoint(
+                                    blindWalls.indexOf(wall),
+                                    wall.getLatitude(),
+                                    wall.getLongitude(),
+                                    pointOfInterest.getId()));
                         }
                     }
-                });
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                }
+            });
+
         }
     }
 
     public void insert(Waypoint waypoint) {
-        this.repository.inset(waypoint);
+        this.repository.insert(waypoint);
     }
 
     public void update(Waypoint waypoint) {
@@ -94,7 +95,7 @@ public class RouteViewModel extends AndroidViewModel {
     }
 
     public void insert(PointOfInterest pointOfInterest) {
-        this.repository.inset(pointOfInterest);
+        this.repository.insert(pointOfInterest);
     }
 
     public void update(PointOfInterest pointOfInterest) {
@@ -105,14 +106,19 @@ public class RouteViewModel extends AndroidViewModel {
         this.repository.delete(pointOfInterest);
     }
 
-    public void deleteAllPointsOfInterest() {this. repository.deleteAllPointsOfInterest();}
+    public void deleteAllPointsOfInterest() {
+        this.repository.deleteAllPointsOfInterest();
+    }
 
-    public void onAPICallback(List<PointOfInterest> blindwalls) {};
+    public void onAPICallback(List<PointOfInterest> blindwalls) {
+    }
 
-    public LiveData<List<PointOfInterest>> getPointOfInterestByLocationName(String locationName) {
+    ;
+
+    public LiveData<List<PointOfInterest>> getPointOfInterestByLocationName(int locationId) {
         LiveData<List<PointOfInterest>> pointOfInterest = null;
         try {
-            pointOfInterest = this.repository.getPointOfInterestByLocation(locationName);
+            pointOfInterest = this.repository.getPointOfInterestByLocation(locationId);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -124,5 +130,9 @@ public class RouteViewModel extends AndroidViewModel {
             };
         }
         return pointOfInterest;
+    }
+
+    public BlindWallsBreda getBlindWallsBreda() {
+        return blindWallsBreda;
     }
 }

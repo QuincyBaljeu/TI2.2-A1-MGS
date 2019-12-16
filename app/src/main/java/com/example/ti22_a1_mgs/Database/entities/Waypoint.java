@@ -9,10 +9,13 @@ import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 @Entity(tableName = "waypoint_table", foreignKeys = {
         @ForeignKey(entity = PointOfInterest.class,
-                parentColumns = "location",
-                childColumns = "pointOfInterestId")
+                parentColumns = "id",
+                childColumns = "pointOfInterestId",
+        onDelete = CASCADE)
 }, indices = {@Index("pointOfInterestId")})
 public class Waypoint {
 
@@ -22,10 +25,10 @@ public class Waypoint {
     private double lat;
     private double lon;
     private boolean visited;
-    private String pointOfInterestId;
+    private Integer pointOfInterestId;
 
 
-    public Waypoint(int number, double lat, double lon, @Nullable String pointOfInterestId) {
+    public Waypoint(int number, double lat, double lon, @Nullable Integer pointOfInterestId) {
         this.number = number;
         this.lat = lat;
         this.lon = lon;
@@ -65,7 +68,7 @@ public class Waypoint {
         return visited;
     }
 
-    public String getPointOfInterestId() {
+    public Integer getPointOfInterestId() {
         return pointOfInterestId;
     }
 
@@ -81,7 +84,7 @@ public class Waypoint {
         this.visited = visited;
     }
 
-    public void setPointOfInterestId(String pointOfInterestId) {
+    public void setPointOfInterestId(Integer pointOfInterestId) {
         this.pointOfInterestId = pointOfInterestId;
     }
 }
