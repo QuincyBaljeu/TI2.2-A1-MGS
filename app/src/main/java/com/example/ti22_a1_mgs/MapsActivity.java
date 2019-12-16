@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -59,6 +60,7 @@ import com.squareup.picasso.Transformation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
@@ -78,10 +80,8 @@ public class MapsActivity extends AppCompatActivity
     private Location currentLocation;
     private LocationRequest locationRequest;
 
-    //TODO migrate to FusedLocationProvider
-
-
     private RouteViewModel viewModelThing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +92,6 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
 
@@ -215,8 +214,7 @@ public class MapsActivity extends AppCompatActivity
             polyOptions.color(ContextCompat.getColor(this, R.color.colorAccent));
             polyOptions.width(10 + i * 3);
             polyOptions.addAll(routeArrayList.get(i).getPoints());
-            Polyline polyline = map.addPolyline(polyOptions);
-            RouteUtil.addToList(polyline);
+            map.addPolyline(polyOptions);
         }
     }
 
@@ -235,12 +233,10 @@ public class MapsActivity extends AppCompatActivity
 
         RouteUtil.routingWaypointsRequest(this, latLngList, this);
 
-        final String imageUrl = "https://blindwalls.gallery/wp-content/uploads/2019/04/2015.09.23_GDFB_RUTGER_TERMOHLEN_Ralph_Roelse_Breda_NL_009-2000x1333.jpg";
-
         //later you can use marker object
         for (int i = 0; i < latLngList.size(); i++) {
             pos = i;
-            MarkerUtil.getIconImage(imageUrl, MapsActivity.this);
+            MarkerUtil.addDefaultMarker(map, latLngList.get(i), "Waypoint " + pos, UUID.randomUUID().toString().substring(0,10));
         }
     }
 
