@@ -1,6 +1,7 @@
 package com.example.ti22_a1_mgs.Database;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -24,9 +25,9 @@ public class RouteViewModel extends AndroidViewModel {
     public RouteViewModel(@NonNull Application application) {
         super(application);
         this.repository = new Reposetory(application);
-        String json = JsonUtil.loadJSONFromAsset(this.getApplication().getApplicationContext());
+        String json = JsonUtil.loadJSONFromAsset(application.getApplicationContext());
         this.blindWallsBreda = BlindWallsBreda.createFromJson(json);
-        fillDatabaseFromData(blindWallsBreda.getAllWalls());
+        //fillDatabaseFromData(blindWallsBreda.getAllWalls());
         this.allWayPoints = repository.getAllWaypoints();
         this.allPointsOfInterest = repository.getAllPointsOfInterest();
     }
@@ -35,6 +36,7 @@ public class RouteViewModel extends AndroidViewModel {
     {
         for (BlindWall wall : blindWalls)
         {
+            Log.d("Blindwall", wall.toString());
             repository.addBlindWall(
                     wall.getAddress(),
                     wall.getDescriptionDutch(),

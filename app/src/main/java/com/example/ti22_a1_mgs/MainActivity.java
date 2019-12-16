@@ -2,6 +2,7 @@ package com.example.ti22_a1_mgs;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RouteViewModel model = ViewModelProviders.of(this).get(RouteViewModel.class);
 
         context = this;
 
