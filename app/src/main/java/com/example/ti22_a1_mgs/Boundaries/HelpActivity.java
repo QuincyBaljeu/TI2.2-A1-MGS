@@ -1,4 +1,4 @@
-package com.example.ti22_a1_mgs;
+package com.example.ti22_a1_mgs.Boundaries;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.ti22_a1_mgs.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;

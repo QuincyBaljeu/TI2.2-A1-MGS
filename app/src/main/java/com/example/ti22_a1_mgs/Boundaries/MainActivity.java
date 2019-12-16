@@ -1,4 +1,4 @@
-package com.example.ti22_a1_mgs;
+package com.example.ti22_a1_mgs.Boundaries;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,10 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
+import com.example.ti22_a1_mgs.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
