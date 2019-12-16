@@ -36,7 +36,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/location_recyclerview"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toTopOf="@+id/nav_view_main"
         app:layout_constraintEnd_toEndOf="parent"
