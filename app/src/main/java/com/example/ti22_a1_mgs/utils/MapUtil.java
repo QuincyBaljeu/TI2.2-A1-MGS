@@ -59,6 +59,10 @@ public class MapUtil {
 //        googleMap.setLatLngBoundsForCameraTarget(LAT_LNG_BOUNDS);
     }
 
+    public static void clearMap(GoogleMap googleMap) {
+        googleMap.clear();
+    }
+
     public static void setMapSettings(GoogleMap googleMap) {
         UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(true);

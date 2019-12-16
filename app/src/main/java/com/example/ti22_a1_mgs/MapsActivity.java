@@ -14,6 +14,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -42,6 +43,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,10 +55,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-import com.squareup.picasso.Transformation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,9 +68,8 @@ public class MapsActivity extends AppCompatActivity
         LocationListener,
         DialogInterface.OnClickListener,
         CustomRoutingListener,
-        View.OnClickListener,
-        Target,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMapLoadedCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -90,46 +87,12 @@ public class MapsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        (findViewById(R.id.action_bar_button)).setOnClickListener(this);
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
-
-//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
-//            @Override
-//            public void onChanged(List<Waypoint> waypoints) {
-//                //stuff that needs to happen when list is edited
-//                for (Waypoint waypoint : waypoints) {
-//                    Log.wtf(TAG, waypoint.toString());
-//                    printPointOfInterest(waypoint);
-//                }
-//            }
-//        });
-//
-//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
-//            @Override
-//            public void onChanged(List<PointOfInterest> pointOfInterests) {
-//                //stuff that needs to happen when list is edited
-//                for (PointOfInterest pointOfInterest : pointOfInterests) {
-//                    Log.wtf(TAG, pointOfInterest.toString());
-//                }
-//            }
-//        });
     }
-
-//    private void printPointOfInterest(Waypoint waypoint) {
-//        this.viewModelThing.getPointOfInterestByLocationName(waypoint.getPointOfInterestId()).observe(this, new Observer<List<PointOfInterest>>() {
-//            @Override
-//            public void onChanged(List<PointOfInterest> pointOfInterests) {
-//                for (PointOfInterest pointOfInterest : pointOfInterests) {
-//                    Log.wtf("Je hebt Hem Kut Wohoo", pointOfInterest.toString());
-//                }
-//            }
-//        });
-//    }
 
     @Override
     public void onPause() {
@@ -163,6 +126,8 @@ public class MapsActivity extends AppCompatActivity
         } else {
             PopupUtil.showAlertDialog(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
+
+        map.setOnMapLoadedCallback(this);
     }
 
     @Override
@@ -187,13 +152,50 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
+    public void onMapLoaded() {
+        List<LatLng> latLngList = new ArrayList<>();
+        latLngList.add(MapUtil.getLatLngFromLocation(currentLocation));
+        latLngList.add(new LatLng(51.571915, 4.768323));
+        latLngList.add(new LatLng(51.53083, 4.46528));
+        latLngList.add(new LatLng(51.53083, 4.46528));
+        latLngList.add(new LatLng(51.644114, 4.599312));
+
+        //create current polyline
+        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation), latLngList.get(1), this);
+
+        //remove first entry because it's already used
+        latLngList.remove(0);
+
+        //create the rest of the polylines
+        RouteUtil.routingWaypointsRequest(this, latLngList, this);
+
+        //later you can use marker object
+        for (int i = 0; i < latLngList.size(); i++) {
+            MarkerUtil.addCustomMarker(map, latLngList.get(i), "Waypoint", UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
+
+        }
+    }
+
+    @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
     }
 
     @Override
-    public void onClick(DialogInterface dialogInterface, int i) {
-        //NOT IMPLEMENTED YET AND TESTING PURPOSES
+    public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex, boolean isMultiple) {
+        Log.d(TAG, "CustomRouting succes!");
+
+        PolylineOptions polyOptions = new PolylineOptions();
+
+        if (isMultiple) {
+            polyOptions.color(ContextCompat.getColor(this, R.color.routeColor));
+        } else {
+            polyOptions.color(ContextCompat.getColor(this, R.color.routeCurrentColor));
+        }
+
+        polyOptions.width(15);
+        polyOptions.addAll(routeArrayList.get(0).getPoints());
+        map.addPolyline(polyOptions);
     }
 
     @Override
@@ -207,78 +209,17 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex, boolean isMultiple) {
-        Log.d(TAG, "CustomRouting succes!");
-
-        PolylineOptions polyOptions = new PolylineOptions();
-
-        if(isMultiple){
-            polyOptions.color(ContextCompat.getColor(this, R.color.routeColor));
-        } else{
-            polyOptions.color(ContextCompat.getColor(this, R.color.routeCurrentColor));
-        }
-
-        polyOptions.width(15);
-        polyOptions.addAll(routeArrayList.get(0).getPoints());
-        map.addPolyline(polyOptions);
-    }
-
-    @Override
     public void onRoutingCancelled() {
         Log.d(TAG, "CustomRouting Cancelled!");
     }
 
     @Override
-    public void onClick(View view) {
-        latLngList.add(MapUtil.getLatLngFromLocation(currentLocation));
-        latLngList.add(new LatLng(51.571915, 4.768323));
-        latLngList.add(new LatLng(51.53083, 4.46528));
-        latLngList.add(new LatLng(51.53083, 4.46528));
-        latLngList.add(new LatLng(51.644114, 4.599312));
-
-        //create current polyline
-        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation),latLngList.get(1), this);
-
-        //remove first entry because it's already used
-        latLngList.remove(0);
-
-        //create the rest of the polylines
-        RouteUtil.routingWaypointsRequest(this, latLngList, this);
-
-        //later you can use marker object
-        for (int i = 0; i < latLngList.size(); i++) {
-            pos = i;
-            MarkerUtil.addDefaultMarker(map, latLngList.get(i), "Waypoint " + pos, UUID.randomUUID().toString().substring(0, 10));
-            //MarkerUtil.getIconImage(null,this);
-        }
-    }
-
-    private List<LatLng> latLngList = new ArrayList<>();
-    private int pos = 0;
-
-    @Override
-    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-        Log.d(TAG, "Bitmap loaded");
-
-        MarkerOptions tempMarker = new MarkerOptions()
-                .position(latLngList.get(pos))
-                .title("Waypoint " + pos)
-                .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-
-        map.addMarker(tempMarker);
-    }
-
-    @Override
-    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-        Log.e(TAG, e.getMessage());
-    }
-
-    @Override
-    public void onPrepareLoad(Drawable placeHolderDrawable) {
-    }
-
-    @Override
     public void onInfoWindowClick(Marker marker) {
         Log.d(TAG, "Clicked on marker: " + marker.getTitle());
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        //NOT IMPLEMENTED YET AND TESTING PURPOSES
     }
 }
