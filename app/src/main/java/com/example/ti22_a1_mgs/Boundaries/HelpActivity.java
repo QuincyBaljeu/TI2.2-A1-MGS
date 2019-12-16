@@ -24,7 +24,7 @@ public class HelpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_help);
 
         TextView helpText = findViewById(R.id.text_helpMenu);
-        helpAdapter = new HelpAdapter();
+        helpAdapter = new HelpAdapter(this.getBaseContext());
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,17 +43,19 @@ public class HelpActivity extends AppCompatActivity {
 
         });
 
-        if(Locale.getDefault().getLanguage().equals("nl")){
+        helpText.setText(helpAdapter.requestHelpText());
 
-            helpText.setText(helpAdapter.getHelpTextNederlands());
-
-        } else if(Locale.getDefault().getLanguage().equals("en")){
-
-            helpText.setText(helpAdapter.getHelpTextEnglish());
-
-        }
-        else {
-            helpText.setText(helpAdapter.getHelpTextEnglish());
-        }
+//        if(Locale.getDefault().getLanguage().equals("nl")){
+//
+//            helpText.setText(helpAdapter.getHelpTextNederlands());
+//
+//        } else if(Locale.getDefault().getLanguage().equals("en")){
+//
+//            helpText.setText(helpAdapter.getHelpTextEnglish());
+//
+//        }
+//        else {
+//            helpText.setText(helpAdapter.getHelpTextEnglish());
+//        }
     }
 }

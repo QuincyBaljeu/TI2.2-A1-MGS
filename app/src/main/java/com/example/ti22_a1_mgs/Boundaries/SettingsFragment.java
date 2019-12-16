@@ -33,7 +33,7 @@ public class SettingsFragment extends PreferenceFragment {
         languagePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String selectedLanguage = (String) newValue;
+                String selectedLanguage = newValue.toString().toUpperCase();
                 settingsAdapter.setLanguage(selectedLanguage);
                 Log.d("@/class", settingsAdapter.getSettings().getLanguage());
                 Log.d("@/SharedPreferece", sharedPreferenceManager.loadStringPreference("LANGUAGE", "default"));
