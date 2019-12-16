@@ -3,6 +3,7 @@ package com.example.ti22_a1_mgs.Database.entities;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "waypoint_table")
@@ -16,7 +17,6 @@ public class Waypoint {
     private boolean visited;
     @ForeignKey(entity = PointOfInterest.class, parentColumns = "pointOfInterestId", childColumns = "pointOfInterestId")
     private int pointOfInterestId;
-
 
     public Waypoint(int number, double lat, double lon) {
         this(number, lat, lon, -1);

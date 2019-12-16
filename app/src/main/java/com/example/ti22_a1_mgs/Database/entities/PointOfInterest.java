@@ -1,5 +1,6 @@
 package com.example.ti22_a1_mgs.Database.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,7 +12,7 @@ public class PointOfInterest {
     private String nlDescription;
     private String enDescription;
 
-    public PointOfInterest(String location, String nlDescription, String enDescription) {
+    public PointOfInterest(String  location, String nlDescription, String enDescription) {
         this.location = location;
         this.nlDescription = nlDescription;
         this.enDescription = enDescription;

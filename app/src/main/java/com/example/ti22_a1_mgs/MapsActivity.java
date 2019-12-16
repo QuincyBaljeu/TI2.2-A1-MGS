@@ -4,12 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -91,7 +89,7 @@ public class MapsActivity extends AppCompatActivity
             MapUtil.setMapSettings(map);
             MapUtil.initializeMapCamera(map);
         } else {
-            PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
+            PopupUtil.showAlertDialog(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
     }
 
@@ -108,12 +106,12 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-        PopupUtil.showNotification(this, "ERROR", "Your connection is suspended!", this);
+        PopupUtil.showAlertDialog(this, "ERROR", "Your connection is suspended!", this);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        PopupUtil.showNotification(this, "ERROR " + connectionResult.getErrorCode(), connectionResult.getErrorMessage(), this);
+        PopupUtil.showAlertDialog(this, "ERROR " + connectionResult.getErrorCode(), connectionResult.getErrorMessage(), this);
     }
 
     @Override
