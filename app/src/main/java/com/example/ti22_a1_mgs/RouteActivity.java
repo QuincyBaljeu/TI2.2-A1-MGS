@@ -2,6 +2,9 @@ package com.example.ti22_a1_mgs;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,15 +14,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.ti22_a1_mgs.Database.RouteViewModel;
+import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RouteActivity extends AppCompatActivity {
 
-    private ArrayList<PointOfInterestTestData> pointsOI;
+    private LiveData<List<PointOfInterest>> allPointsOfInterest;
     private RecyclerView recyclerView;
-    private POIAdapter adapter;
+    private RouteViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +48,8 @@ public class RouteActivity extends AppCompatActivity {
 
         });
 
-        pointsOI = new ArrayList<>();
-        createDataSet();
+        model = ViewModelProviders.of(this).get(RouteViewModel.class);
+        allPointsOfInterest = model.getAllPointsOfInterest();
 
         recyclerView = findViewById(R.id.location_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -51,25 +57,22 @@ public class RouteActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(
                 this, 1, GridLayoutManager.VERTICAL, false)
         );
-        adapter = new POIAdapter(pointsOI);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(this.model.getPoiAdapter());
+
+        this.model.getAllPointsOfInterest().observe(this, new androidx.lifecycle.Observer<List<PointOfInterest>>() {
+            @Override
+            public void onChanged(List<PointOfInterest> point) {
+                model.getPoiAdapter().setPointOfInterests(point);
+            }
+        });
 
 
+        this.model.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
+            @Override
+            public void onChanged(List<PointOfInterest> point) {
+                model.reloadList(point);
+            }
+        });
 
-    }
-
-
-    public void createDataSet(){
-        int i;
-        int random;
-
-        int max = 1000;
-        int min = 1;
-
-        int range = max - min + 1;
-        for (i = 0; i < 10; i++){
-            random = (int)(Math.random() * range) + min;
-            pointsOI.add(new PointOfInterestTestData("PointOfInterest:" + random, random));
-        }
     }
 }

@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         context = this;
-        model = ViewModelProviders.of(this).get(MainViewModel.class);
+        //model = ViewModelProviders.of(this).get(MainViewModel.class);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

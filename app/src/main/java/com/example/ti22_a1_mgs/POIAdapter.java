@@ -9,16 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class POIAdapter extends RecyclerView.Adapter<POIAdapter.MyViewHolder> {
 
-    private ArrayList<PointOfInterestTestData> dataset;
+    private List<PointOfInterest> dataset = new ArrayList<>();
 
-    public POIAdapter(ArrayList<PointOfInterestTestData> dataset) {
-        this.dataset = dataset;
+
+    public POIAdapter() {
     }
 
 
@@ -32,9 +36,9 @@ public class POIAdapter extends RecyclerView.Adapter<POIAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        PointOfInterestTestData poi = dataset.get(position);
-        holder.id.setText(poi.getTitle());
-        holder.imageView.setBackgroundColor(poi.getRandomNumber());
+        PointOfInterest poi = dataset.get(position);
+        holder.id.setText(poi.getLocation());
+       // holder.imageView.setBackgroundColor(poi.getRandomNumber());
 
 
     }
@@ -59,5 +63,9 @@ public class POIAdapter extends RecyclerView.Adapter<POIAdapter.MyViewHolder> {
             imageView = (ImageView) itemView.findViewById(R.id.PointOfViewImage);
 
         }
+    }
+
+    public void setPointOfInterests(List<PointOfInterest> dataset) {
+        this.dataset = dataset;
     }
 }

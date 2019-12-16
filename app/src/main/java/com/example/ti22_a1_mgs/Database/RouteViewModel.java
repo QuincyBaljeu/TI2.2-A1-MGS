@@ -12,6 +12,7 @@ import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
 import com.example.ti22_a1_mgs.Database.blindwalls.JsonUtil;
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
+import com.example.ti22_a1_mgs.POIAdapter;
 
 import java.util.List;
 
@@ -20,12 +21,14 @@ public class RouteViewModel extends AndroidViewModel {
     private Reposetory repository;
     private LiveData<List<Waypoint>> allWayPoints;
     private LiveData<List<PointOfInterest>> allPointsOfInterest;
+    private POIAdapter poiAdapter;
 
     public RouteViewModel(@NonNull Application application) {
         super(application);
         this.repository = new Reposetory(application);
         this.allWayPoints = repository.getAllWaypoints();
         this.allPointsOfInterest = repository.getAllPointsOfInterest();
+        this.poiAdapter = new POIAdapter();
     }
 
 
@@ -69,4 +72,12 @@ public class RouteViewModel extends AndroidViewModel {
     public void deleteAllPointsOfInterest() {this. repository.deleteAllPointsOfInterest();}
 
     public void onAPICallback(List<PointOfInterest> blindwalls) {};
+
+    public POIAdapter getPoiAdapter() { return poiAdapter;}
+
+    public void reloadList(List<PointOfInterest> points){
+        poiAdapter.setPointOfInterests(points);
+        System.out.println(points);
+        poiAdapter.notifyDataSetChanged();
+    }
 }
