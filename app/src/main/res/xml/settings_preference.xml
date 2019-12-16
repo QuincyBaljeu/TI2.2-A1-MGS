@@ -3,20 +3,22 @@
 
 
     <ListPreference
-        android:key="languageSelector"
-        android:title="@string/settings_language"
+        android:key="@string/settings_language_id"
+        android:title="@string/settings_language_title"
         android:entries="@array/settings_availableLanguages"
         android:entryValues="@array/settings_availableLanguages"
-        android:defaultValue="@string/settings_defaultLanguage"
-        android:summary=""/>
-
-
-
+        android:defaultValue="@string/settings_language_defaultLanguage"
+       />
 
     <CheckBoxPreference
-        android:key="colorblindToggle"
-        android:title="@string/settings_colorblind"
-        android:summary=""
+        android:key="@string/settings_satellite_id"
+        android:title="@string/settings_satellite_title"
+        android:defaultValue="false"
+        />
+
+    <CheckBoxPreference
+        android:key="@string/settings_colorblind_id"
+        android:title="@string/settings_colorblind_title"
         android:defaultValue="false"/>
 
 
