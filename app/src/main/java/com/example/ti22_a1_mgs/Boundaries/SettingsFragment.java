@@ -2,6 +2,7 @@ package com.example.ti22_a1_mgs.Boundaries;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
@@ -28,11 +29,12 @@ public class SettingsFragment extends PreferenceFragment {
         settingsAdapter = new SettingsAdapter(this.getActivity().getBaseContext());
         sharedPreferenceManager = new SharedPreferenceManager(this.getActivity().getBaseContext());
 
-        Preference languagePreference = findPreference("Language");
+        final ListPreference languagePreference = (ListPreference) findPreference("Language");
         languagePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d("@/d", "Preference changed");
+                String selectedLanguage = (String) newValue;
+                Log.d("@/d", selectedLanguage);
                 return true;
             }
         });
