@@ -19,7 +19,7 @@ import static androidx.room.ForeignKey.CASCADE;
 }, indices = {@Index("pointOfInterestId")})
 public class Waypoint {
 
-    @PrimaryKey
+    @PrimaryKey @Nullable
     private int number;
 
     private double lat;
