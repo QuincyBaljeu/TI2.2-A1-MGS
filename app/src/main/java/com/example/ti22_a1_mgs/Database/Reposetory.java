@@ -54,10 +54,33 @@ public class Reposetory {
     }
 
     public void addBlindWall(String address, String descriptionDutch, String descriptionEnglish, double latitude, double longitude) {
-        int
-
+        new AddBlindWallAsyncTask(new BlindWallSubClass(this.pointOfInterestDao, address, descriptionDutch, descriptionEnglish, latitude, longitude)).execute();
     }
 
+    private static class AddBlindWallAsyncTask extends AsyncTask<BlindWallSubClass, Void, Void>
+    {
+        BlindWallSubClass bwsc;
+        private PointOfInterestDao pointOfInterestDao;
+
+        private AddBlindWallAsyncTask(BlindWallSubClass bwsc){
+            this.bwsc = bwsc;
+        }
+        
+        @Override
+        protected Void doInBackground(BlindWallSubClass... blindWallSubClasses) {
+            this.pointOfInterestDao = bwsc.pointOfInterestDao;
+            PointOfInterest poi = new PointOfInterest(bwsc.adress, bwsc.descriptionNL, bwsc.descriptionEN);
+            //Todo: put poi, then put waypoint
+            new InsertPointOfInterestAsyncTask(this.pointOfInterestDao).doInBackground(poi);
+            
+            /*
+            int number = 0;
+
+            Waypoint waypoint = new Waypoint(number, latitude, longitude, poiid);
+*/
+            return null;
+        }
+    }
     private static class InsertPointOfInterestAsyncTask extends AsyncTask<PointOfInterest, Void, Void> {
 
         private PointOfInterestDao pointOfInterestDao;
@@ -197,4 +220,21 @@ public class Reposetory {
         }
     }
 
+
+    private static class BlindWallSubClass {
+        private PointOfInterestDao pointOfInterestDao;
+        private String adress;
+        private String descriptionNL;
+        private String descriptionEN;
+        private double latitude;
+        private double longitude;
+        public BlindWallSubClass(PointOfInterestDao pointOfInterestDao, String address, String descriptionDutch, String descriptionEnglish, double latitude, double longitude) {
+            this.pointOfInterestDao = pointOfInterestDao;
+            this.adress = address;
+            this.descriptionNL = descriptionDutch;
+            this.descriptionEN = descriptionEnglish;
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+    }
 }
