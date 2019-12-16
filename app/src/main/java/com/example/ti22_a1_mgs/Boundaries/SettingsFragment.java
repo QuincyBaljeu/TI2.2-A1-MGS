@@ -39,8 +39,8 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 boolean toggle = Boolean.valueOf(newValue.toString());
-                Log.d("@/d", String.valueOf(toggle));
                 settingsAdapter.setSatellite(toggle);
+                Log.d("@/d", String.valueOf(settingsAdapter.getSettings().isSatelliteMode()));
                 return true;
             }
         });
@@ -50,8 +50,8 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 boolean toggle = Boolean.valueOf(newValue.toString());
-                Log.d("@/d", String.valueOf(toggle));
                 settingsAdapter.setColorblind(toggle);
+                Log.d("@/d", String.valueOf(settingsAdapter.getSettings().isColorblindMode()));
                 return true;
             }
         });

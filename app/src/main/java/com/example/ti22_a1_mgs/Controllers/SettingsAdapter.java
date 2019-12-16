@@ -15,10 +15,14 @@ public class SettingsAdapter {
     }
 
     public void setSatellite(boolean toggle){
-        this.settings.setColorblindMode(toggle);
+        this.settings.setSatelliteMode(toggle);
     }
 
     public void setColorblind(boolean toggle){
         this.settings.setColorblindMode(toggle);
+    }
+
+    public Settings getSettings(){
+        return this.settings;
     }
 }
