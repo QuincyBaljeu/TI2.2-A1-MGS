@@ -18,33 +18,17 @@ import java.util.List;
 public class RouteViewModel extends AndroidViewModel {
 
     private Reposetory repository;
-    private BlindWallsBreda blindWallsBreda;
     private LiveData<List<Waypoint>> allWayPoints;
     private LiveData<List<PointOfInterest>> allPointsOfInterest;
 
     public RouteViewModel(@NonNull Application application) {
         super(application);
         this.repository = new Reposetory(application);
-        String json = JsonUtil.loadJSONFromAsset(application.getApplicationContext());
-        this.blindWallsBreda = BlindWallsBreda.createFromJson(json);
-        //fillDatabaseFromData(blindWallsBreda.getAllWalls());
         this.allWayPoints = repository.getAllWaypoints();
         this.allPointsOfInterest = repository.getAllPointsOfInterest();
     }
 
-    private void fillDatabaseFromData(List<BlindWall> blindWalls)
-    {
-        for (BlindWall wall : blindWalls)
-        {
-            Log.d("Blindwall", wall.toString());
-            repository.addBlindWall(
-                    wall.getAddress(),
-                    wall.getDescriptionDutch(),
-                    wall.getDescriptionEnglish(),
-                    wall.getLatitude(),
-                    wall.getLongitude());
-        }
-    }
+
 
     public void insert(Waypoint waypoint) {
         this.repository.inset(waypoint);
