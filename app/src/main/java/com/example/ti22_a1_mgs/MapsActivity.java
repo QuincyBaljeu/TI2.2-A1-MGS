@@ -133,12 +133,12 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingStart() {
-        Log.d(TAG, "Routing started!");
+        Log.d(TAG, "CustomRouting started!");
     }
 
     @Override
     public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex) {
-        Log.d(TAG, "Routing succes!");
+        Log.d(TAG, "CustomRouting succes!");
 
         //add route(s) to the map.
         for (int i = 0; i < routeArrayList.size(); i++) {
@@ -154,7 +154,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingCancelled() {
-        Log.d(TAG, "Routing Cancelled!");
+        Log.d(TAG, "CustomRouting Cancelled!");
     }
 
     @Override

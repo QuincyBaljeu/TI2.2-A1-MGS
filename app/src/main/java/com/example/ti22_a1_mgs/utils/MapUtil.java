@@ -34,25 +34,25 @@ public class MapUtil {
                     new LatLng(51.654991, 5.060769)
             );
 
-    private static final float DEFAULT_CAMERA_ZOOM = 15.0f;
+    private static final float DEFAULT_CAMERA_ZOOM = 12.0f;
 
 
     public static void setMapStyling(Activity activity, GoogleMap googleMap) {
         //custom
-        try {
-            boolean success = googleMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            activity, R.raw.custom_map_style));
-
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
-        }
+//        try {
+//            boolean success = googleMap.setMapStyle(
+//                    MapStyleOptions.loadRawResourceStyle(
+//                            activity, R.raw.custom_map_style));
+//
+//            if (!success) {
+//                Log.e(TAG, "Style parsing failed.");
+//            }
+//        } catch (Resources.NotFoundException e) {
+//            Log.e(TAG, "Can't find style. Error: ", e);
+//        }
 
         //standard
-//        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 
     public static void initializeMapCamera(GoogleMap googleMap) {
