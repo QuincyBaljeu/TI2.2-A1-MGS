@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.ti22_a1_mgs.Database.blindwalls.BlindWall;
+import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
+import com.example.ti22_a1_mgs.Database.blindwalls.JsonUtil;
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 
@@ -14,14 +17,31 @@ import java.util.List;
 public class RouteViewModel extends AndroidViewModel {
 
     private Reposetory repository;
+    private BlindWallsBreda blindWallsBreda;
     private LiveData<List<Waypoint>> allWayPoints;
     private LiveData<List<PointOfInterest>> allPointsOfInterest;
 
     public RouteViewModel(@NonNull Application application) {
         super(application);
         this.repository = new Reposetory(application);
+        String json = JsonUtil.loadJSONFromAsset(this.getApplication().getApplicationContext());
+        this.blindWallsBreda = BlindWallsBreda.createFromJson(json);
+        fillDatabaseFromData(blindWallsBreda.getAllWalls());
         this.allWayPoints = repository.getAllWaypoints();
         this.allPointsOfInterest = repository.getAllPointsOfInterest();
+    }
+
+    private void fillDatabaseFromData(List<BlindWall> blindWalls)
+    {
+        for (BlindWall wall : blindWalls)
+        {
+            repository.addBlindWall(
+                    wall.getAddress(),
+                    wall.getDescriptionDutch(),
+                    wall.getDescriptionEnglish(),
+                    wall.getLatitude(),
+                    wall.getLongitude());
+        }
     }
 
     public void insert(Waypoint waypoint) {
@@ -61,4 +81,6 @@ public class RouteViewModel extends AndroidViewModel {
     }
 
     public void deleteAllPointsOfInterest() {this. repository.deleteAllPointsOfInterest();}
+
+    public void onAPICallback(List<PointOfInterest> blindwalls) {};
 }

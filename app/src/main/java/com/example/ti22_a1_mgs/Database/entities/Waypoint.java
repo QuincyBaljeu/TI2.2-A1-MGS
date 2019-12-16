@@ -15,7 +15,7 @@ public class Waypoint {
     private double lon;
     private boolean visited;
     @ForeignKey(entity = PointOfInterest.class, parentColumns = "pointOfInterestId", childColumns = "pointOfInterestId")
-    private int pointOfInterestId;
+        private int pointOfInterestId;
 
 
     public Waypoint(int number, double lat, double lon, int pointOfInterestId) {

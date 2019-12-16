@@ -53,6 +53,11 @@ public class Reposetory {
         new DeleteAllPointsOfInterestAsyncTask(this.pointOfInterestDao).doInBackground();
     }
 
+    public void addBlindWall(String address, String descriptionDutch, String descriptionEnglish, double latitude, double longitude) {
+        int
+
+    }
+
     private static class InsertPointOfInterestAsyncTask extends AsyncTask<PointOfInterest, Void, Void> {
 
         private PointOfInterestDao pointOfInterestDao;
