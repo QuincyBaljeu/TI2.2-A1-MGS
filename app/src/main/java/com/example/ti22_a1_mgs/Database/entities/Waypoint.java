@@ -18,10 +18,6 @@ public class Waypoint {
     private int pointOfInterestId;
 
 
-    public Waypoint(int number, double lat, double lon) {
-        this(number, lat, lon, -1);
-    }
-
     public Waypoint(int number, double lat, double lon, int pointOfInterestId) {
         this.number = number;
         this.lat = lat;

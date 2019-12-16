@@ -1,12 +1,13 @@
 package com.example.ti22_a1_mgs.Database.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "point_of_interest_table")
 public class PointOfInterest {
 
-    @PrimaryKey
+    @PrimaryKey @NonNull
     private String location;
     private String nlDescription;
     private String enDescription;
