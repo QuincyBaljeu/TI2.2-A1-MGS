@@ -25,7 +25,7 @@ public class PopupUtil {
                 .show();
     }
 
-    public static void showSnackbarNotification(View view, String message, int duration,String actionText ,View.OnClickListener onClickListener){
+    public static void showSnackbarNotification(View view, String message, int duration, String actionText ,View.OnClickListener onClickListener){
         Snackbar.make(view,message,duration)
                 .setAction(actionText,onClickListener)
                 .show();

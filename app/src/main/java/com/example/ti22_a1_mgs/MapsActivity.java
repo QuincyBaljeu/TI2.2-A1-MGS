@@ -7,8 +7,13 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +42,11 @@ import com.example.ti22_a1_mgs.utils.PopupUtil;
 import com.example.ti22_a1_mgs.utils.RouteUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.internal.Constants;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingEvent;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -51,6 +61,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -60,7 +72,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends AppCompatActivity
+public class MapsActivity extends AppCompatActivity, BroadcastReceiver
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -72,6 +84,12 @@ public class MapsActivity extends AppCompatActivity
         GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
+    private static final float GEOFENCE_RADIUS_IN_METERS = 25;
+    private static final long GEOFENCE_EXPIRATION_IN_MILLISECONDS = 1000*60*60;
+
+    private GeofencingClient geofencingClient;
+    private List<Geofence> geofenceList;
+    private PendingIntent geofencePendingIntent;
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -82,6 +100,7 @@ public class MapsActivity extends AppCompatActivity
 
 
     private RouteViewModel viewModelThing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +114,26 @@ public class MapsActivity extends AppCompatActivity
 
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
+        geofencingClient = LocationServices.getGeofencingClient(this);
+        geofenceList = new ArrayList<>();
+        addGeofence(3,3,"key");
+        GeofencingRequest request = getGeofencingRequest();
+        geofencingClient.addGeofences(request, getGeoFencePendingIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Geofences added
+                        // ...
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to add geofences
+                        // ...
+                    }
+                });
+
 
 //        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
 //            @Override
@@ -118,6 +157,21 @@ public class MapsActivity extends AppCompatActivity
 //        });
     }
 
+    private PendingIntent getGeoFencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+        Intent intent = new Intent(this,
+                MapsActivity.class);
+// We use FLAG_UPDATE_CURRENT
+// so that we get the same pending intent back when calling
+// addGeofences() and removeGeofences().
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+
+
 //    private void printPointOfInterest(Waypoint waypoint) {
 //        this.viewModelThing.getPointOfInterestByLocationName(waypoint.getPointOfInterestId()).observe(this, new Observer<List<PointOfInterest>>() {
 //            @Override
@@ -128,6 +182,38 @@ public class MapsActivity extends AppCompatActivity
 //            }
 //        });
 //    }
+
+
+    private void addGeoFence(double lat, double lon)
+    {
+
+
+    }
+
+    private GeofencingRequest getGeofencingRequest(){
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        builder.addGeofences(geofenceList);
+        GeofencingRequest request = builder.build();
+        return request;
+    }
+
+    private Geofence addGeofence(double lat, double lon, String key){
+        geofenceList.add(new Geofence.Builder()
+                // Set the request ID of the geofence. This is a string to identify this
+                // geofence.
+                .setRequestId(key)
+
+                .setCircularRegion(
+                        lat,
+                        lon,
+                        GEOFENCE_RADIUS_IN_METERS
+                )
+                .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build());
+    }
 
     @Override
     public void onPause() {
@@ -270,5 +356,56 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onInfoWindowClick(Marker marker) {
         Log.d(TAG, "Clicked on marker: " + marker.getTitle());
+    }
+
+
+    //For receiving Geofence Intents
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        if (geofencingEvent.hasError()) {
+            Log.e(TAG, geofencingEvent.toString());
+            return;
+        }
+
+        // Get the transition type.
+        int geofenceTransition = geofencingEvent.getGeofenceTransition();
+
+        // Test that the reported transition was of interest.
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
+                geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
+
+            // Get the geofences that were triggered. A single event can trigger
+            // multiple geofences.
+            List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+            List<String> keysToRemove = new ArrayList<String>();
+            for (Geofence geofence : triggeringGeofences)
+            {
+                String key = geofence.getRequestId();
+                keysToRemove.add(key);
+                PopupUtil.showAlertDialog(this,  getString(R.string.waypoint_visited), "Duh", null);
+            }
+            geofencingClient.removeGeofences(keysToRemove);
+            //Todo: Set waypoint to visited in database
+            //Todo: update route
+
+            // Get the transition details as a String.
+            String geofenceTransitionDetails = getGeofenceTransitionDetails(
+                    this,
+                    geofenceTransition,
+                    triggeringGeofences
+            );
+            // Send notification and log the transition details.
+            //sendNotification(geofenceTransitionDetails);
+            Log.i(TAG, geofenceTransitionDetails);
+        } else {
+            // Log the error.
+            Log.e(TAG, "BIG ERROR IN GEOFENCING");
+        }
+    }
+
+    private String getGeofenceTransitionDetails(MapsActivity mapsActivity, int geofenceTransition, List<Geofence> triggeringGeofences) {
+        return mapsActivity.toString() + " " + geofenceTransition + " " + triggeringGeofences.toString();
     }
 }
