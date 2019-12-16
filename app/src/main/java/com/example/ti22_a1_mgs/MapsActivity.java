@@ -6,12 +6,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -134,7 +132,7 @@ public class MapsActivity extends AppCompatActivity
             MapUtil.setMapSettings(map);
             MapUtil.initializeMapCamera(map);
         } else {
-            PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
+            PopupUtil.showAlertDialog(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
     }
 
@@ -151,12 +149,12 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-        PopupUtil.showNotification(this, "ERROR", "Your connection is suspended!", this);
+        PopupUtil.showAlertDialog(this, "ERROR", "Your connection is suspended!", this);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        PopupUtil.showNotification(this, "ERROR " + connectionResult.getErrorCode(), connectionResult.getErrorMessage(), this);
+        PopupUtil.showAlertDialog(this, "ERROR " + connectionResult.getErrorCode(), connectionResult.getErrorMessage(), this);
     }
 
     @Override
@@ -176,12 +174,12 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingStart() {
-        Log.d(TAG, "Routing started!");
+        Log.d(TAG, "CustomRouting started!");
     }
 
     @Override
     public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex) {
-        Log.d(TAG, "Routing succes!");
+        Log.d(TAG, "CustomRouting succes!");
 
         //add route(s) to the map.
         for (int i = 0; i < routeArrayList.size(); i++) {
@@ -197,7 +195,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingCancelled() {
-        Log.d(TAG, "Routing Cancelled!");
+        Log.d(TAG, "CustomRouting Cancelled!");
     }
 
     @Override

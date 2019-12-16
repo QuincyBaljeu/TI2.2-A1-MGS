@@ -22,10 +22,8 @@ public class RouteUtil {
     public static void routingWaypointRequest(Context context, LatLng start, LatLng end, RoutingListener routingListener) {
         String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
 
-        Log.d(TAG,key);
-
-        Routing routing = new Routing.Builder()
-                .travelMode(Routing.TravelMode.WALKING)
+        CustomRouting routing = new CustomRouting.Builder()
+                .travelMode(CustomRouting.TravelMode.WALKING)
                 .withListener(routingListener)
                 .waypoints(start, end)
                 .key(key)
@@ -36,12 +34,10 @@ public class RouteUtil {
     public static void routingWaypointsRequest(Context context, List<LatLng> waypointList, RoutingListener routingListener) {
         String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
 
-        Log.d(TAG,key);
-
-        Routing routing = new Routing.Builder()
-                .travelMode(Routing.TravelMode.WALKING)
+        CustomRouting routing = new CustomRouting.Builder()
+                .travelMode(CustomRouting.TravelMode.WALKING)
                 .withListener(routingListener)
-                .waypoints()
+                .waypoints(waypointList)
                 .key(key)
                 .build();
         routing.execute();
