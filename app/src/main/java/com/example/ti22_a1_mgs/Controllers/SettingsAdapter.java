@@ -6,8 +6,8 @@ import com.example.ti22_a1_mgs.util.Language;
 public class SettingsAdapter {
     private Settings settings;
 
-    public SettingsAdapter(Settings settings){
-        this.settings = settings;
+    public SettingsAdapter(){
+        settings = new Settings();
     }
 
     public void setLanguage(Language language){

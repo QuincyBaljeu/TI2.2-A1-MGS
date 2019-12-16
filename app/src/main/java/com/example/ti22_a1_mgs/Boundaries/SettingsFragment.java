@@ -9,19 +9,21 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.ti22_a1_mgs.Controllers.SettingsAdapter;
 import com.example.ti22_a1_mgs.R;
 
 import java.io.Console;
 
 public class SettingsFragment extends PreferenceFragment {
 
-    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
-
+    private SettingsAdapter settingsAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_preference);
+
+        settingsAdapter = new SettingsAdapter();
 
         Preference languagePreference = findPreference("Language");
         languagePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -38,6 +40,7 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 boolean toggle = Boolean.valueOf(newValue.toString());
                 Log.d("@/d", String.valueOf(toggle));
+                settingsAdapter.setSatellite(toggle);
                 return true;
             }
         });
@@ -48,6 +51,7 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 boolean toggle = Boolean.valueOf(newValue.toString());
                 Log.d("@/d", String.valueOf(toggle));
+                settingsAdapter.setColorblind(toggle);
                 return true;
             }
         });
