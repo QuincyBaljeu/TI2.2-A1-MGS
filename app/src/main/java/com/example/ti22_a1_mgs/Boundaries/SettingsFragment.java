@@ -11,19 +11,22 @@ import androidx.annotation.Nullable;
 
 import com.example.ti22_a1_mgs.Controllers.SettingsAdapter;
 import com.example.ti22_a1_mgs.R;
+import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
 
 import java.io.Console;
 
 public class SettingsFragment extends PreferenceFragment {
 
     private SettingsAdapter settingsAdapter;
+    private SharedPreferenceManager sharedPreferenceManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_preference);
 
-        settingsAdapter = new SettingsAdapter();
+        settingsAdapter = new SettingsAdapter(this.getActivity().getBaseContext());
+        sharedPreferenceManager = new SharedPreferenceManager(this.getActivity().getBaseContext());
 
         Preference languagePreference = findPreference("Language");
         languagePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -40,7 +43,9 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 boolean toggle = Boolean.valueOf(newValue.toString());
                 settingsAdapter.setSatellite(toggle);
-                Log.d("@/d", String.valueOf(settingsAdapter.getSettings().isSatelliteMode()));
+                Log.d("@/Class", String.valueOf(settingsAdapter.getSettings().isSatelliteMode()));
+                Log.d("@/SharedPreference", String.valueOf(sharedPreferenceManager.loadBoolPreference("SATELLITEMODE", true)));
+
                 return true;
             }
         });
@@ -51,7 +56,9 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 boolean toggle = Boolean.valueOf(newValue.toString());
                 settingsAdapter.setColorblind(toggle);
-                Log.d("@/d", String.valueOf(settingsAdapter.getSettings().isColorblindMode()));
+                Log.d("@/Class", String.valueOf(settingsAdapter.getSettings().isColorblindMode()));
+                Log.d("@/SharedPreference", String.valueOf(sharedPreferenceManager.loadBoolPreference("COLORBLINDMODE", true)));
+
                 return true;
             }
         });
