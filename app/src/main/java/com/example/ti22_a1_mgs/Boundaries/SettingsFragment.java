@@ -34,7 +34,9 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 String selectedLanguage = (String) newValue;
-                Log.d("@/d", selectedLanguage);
+                settingsAdapter.setLanguage(selectedLanguage);
+                Log.d("@/class", settingsAdapter.getSettings().getLanguage());
+                Log.d("@/SharedPreferece", sharedPreferenceManager.loadStringPreference("LANGUAGE", "default"));
                 return true;
             }
         });

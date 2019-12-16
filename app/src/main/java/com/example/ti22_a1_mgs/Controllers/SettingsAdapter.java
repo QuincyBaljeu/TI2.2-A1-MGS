@@ -3,7 +3,6 @@ package com.example.ti22_a1_mgs.Controllers;
 import android.content.Context;
 
 import com.example.ti22_a1_mgs.Entities.Settings;
-import com.example.ti22_a1_mgs.util.Language;
 import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
 
 public class SettingsAdapter {
@@ -16,8 +15,9 @@ public class SettingsAdapter {
     }
 
 
-    public void setLanguage(Language language){
+    public void setLanguage(String language){
         this.settings.setLanguage(language);
+        sharedPreferenceManager.savePreference("LANGUAGE", language, SharedPreferenceManager.Type.STRING);
     }
 
     public void setSatellite(boolean toggle){

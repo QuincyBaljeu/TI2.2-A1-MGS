@@ -1,25 +1,25 @@
 package com.example.ti22_a1_mgs.Entities;
 
-import com.example.ti22_a1_mgs.util.Language;
+
 
 public class Settings {
 
-    private Language language;
+    private String language;
     private boolean colorblindMode;
     private boolean satelliteMode;
 
     public Settings(){
-        this.language = Language.ENGLISH;
+        this.language = "ENGLISH";
         this.colorblindMode = false;
         this.satelliteMode = false;
     }
 
 
-    public Language getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
