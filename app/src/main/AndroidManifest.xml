@@ -9,12 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Boundaries.MapActivity" />
-        <activity android:name=".Boundaries.SettingsActivity" />
-        <activity android:name=".Boundaries.PoiActivity" />
-        <activity android:name=".Boundaries.RouteActivity" />
-        <activity android:name=".Boundaries.HelpActivity" />
-        <activity android:name=".Boundaries.MainActivity">
+        <activity android:name=".Boundaries.MapActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Boundaries.SettingsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Boundaries.PoiActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Boundaries.RouteActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Boundaries.HelpActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Boundaries.MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

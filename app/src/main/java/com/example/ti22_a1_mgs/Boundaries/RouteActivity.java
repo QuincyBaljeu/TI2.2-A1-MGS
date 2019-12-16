@@ -20,6 +20,7 @@ public class RouteActivity extends AppCompatActivity {
     private ArrayList<PointOfInterestTestData> pointsOI;
     private RecyclerView recyclerView;
     private POIAdapter adapter;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,8 @@ public class RouteActivity extends AppCompatActivity {
         );
         adapter = new POIAdapter(pointsOI);
         recyclerView.setAdapter(adapter);
+
+
 
 
 
