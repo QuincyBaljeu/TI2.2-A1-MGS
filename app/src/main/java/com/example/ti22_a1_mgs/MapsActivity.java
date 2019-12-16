@@ -30,6 +30,7 @@ import com.directions.route.RoutingListener;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
+import com.example.ti22_a1_mgs.utils.CustomRoutingListener;
 import com.example.ti22_a1_mgs.utils.LocationUtil;
 import com.example.ti22_a1_mgs.utils.MapUtil;
 import com.example.ti22_a1_mgs.utils.MarkerUtil;
@@ -68,7 +69,7 @@ public class MapsActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         DialogInterface.OnClickListener,
-        RoutingListener,
+        CustomRoutingListener,
         View.OnClickListener,
         Target,
         GoogleMap.OnInfoWindowClickListener {
@@ -81,6 +82,8 @@ public class MapsActivity extends AppCompatActivity
     private LocationRequest locationRequest;
 
     private RouteViewModel viewModelThing;
+
+    //todo remove polylines
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,18 +207,20 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex) {
+    public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex, boolean isMultiple) {
         Log.d(TAG, "CustomRouting succes!");
 
-        //add route(s) to the map.
-        for (int i = 0; i < routeArrayList.size(); i++) {
+        PolylineOptions polyOptions = new PolylineOptions();
 
-            PolylineOptions polyOptions = new PolylineOptions();
-            polyOptions.color(ContextCompat.getColor(this, R.color.colorAccent));
-            polyOptions.width(10 + i * 3);
-            polyOptions.addAll(routeArrayList.get(i).getPoints());
-            map.addPolyline(polyOptions);
+        if(isMultiple){
+            polyOptions.color(ContextCompat.getColor(this, R.color.routeColor));
+        } else{
+            polyOptions.color(ContextCompat.getColor(this, R.color.routeCurrentColor));
         }
+
+        polyOptions.width(15);
+        polyOptions.addAll(routeArrayList.get(0).getPoints());
+        map.addPolyline(polyOptions);
     }
 
     @Override
@@ -225,18 +230,26 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-//        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation), new LatLng(51.571915, 4.768323), this);
-
         latLngList.add(MapUtil.getLatLngFromLocation(currentLocation));
         latLngList.add(new LatLng(51.571915, 4.768323));
         latLngList.add(new LatLng(51.53083, 4.46528));
+        latLngList.add(new LatLng(51.53083, 4.46528));
+        latLngList.add(new LatLng(51.644114, 4.599312));
 
+        //create current polyline
+        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation),latLngList.get(1), this);
+
+        //remove first entry because it's already used
+        latLngList.remove(0);
+
+        //create the rest of the polylines
         RouteUtil.routingWaypointsRequest(this, latLngList, this);
 
         //later you can use marker object
         for (int i = 0; i < latLngList.size(); i++) {
             pos = i;
-            MarkerUtil.addDefaultMarker(map, latLngList.get(i), "Waypoint " + pos, UUID.randomUUID().toString().substring(0,10));
+            MarkerUtil.addDefaultMarker(map, latLngList.get(i), "Waypoint " + pos, UUID.randomUUID().toString().substring(0, 10));
+            //MarkerUtil.getIconImage(null,this);
         }
     }
 
@@ -246,6 +259,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
         Log.d(TAG, "Bitmap loaded");
+
         MarkerOptions tempMarker = new MarkerOptions()
                 .position(latLngList.get(pos))
                 .title("Waypoint " + pos)

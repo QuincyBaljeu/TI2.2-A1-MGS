@@ -1,8 +1,11 @@
 package com.example.ti22_a1_mgs.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 
+import com.example.ti22_a1_mgs.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -34,13 +37,47 @@ public class MarkerUtil {
         return transformation;
     }
 
+    private static Target target;
+
+//    private static Target getTarget() {
+//        if (target == null) {
+//            synchronized (MarkerUtil.class) {
+//                target = new Target() {
+//                    @Override
+//                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                    }
+//                }
+//            }
+//        }
+//        return target;
+//    }
+
     public static void getIconImage(String imageUrl, Target target) {
-        Picasso.get()
-                .load(imageUrl)
-                .transform(getTransformationInstance())
-                .resize(DEFAULT_ICON_WIDTH, DEFAULT_ICON_HEIGHT)
-                .into(target)
-        ;
+        if (imageUrl == null) {
+            Picasso.get()
+                    .load(R.drawable.blindwalls_icon)
+                    .transform(getTransformationInstance())
+                    .resize(DEFAULT_ICON_WIDTH, DEFAULT_ICON_HEIGHT)
+                    .into(target);
+        } else {
+            Picasso.get()
+                    .load(imageUrl)
+                    .transform(getTransformationInstance())
+                    .resize(DEFAULT_ICON_WIDTH, DEFAULT_ICON_HEIGHT)
+                    .into(target);
+        }
+
     }
 
     public static void addDefaultMarker(GoogleMap googleMap, LatLng latLng, String title, String subtitle) {

@@ -14,6 +14,7 @@ public class CustomRouting extends CustomAbstractRouting {
     private final boolean optimize;
     private final String language;
     private final String key;
+    private final boolean multiple;
 
     private CustomRouting(com.example.ti22_a1_mgs.utils.CustomRouting.Builder builder) {
         super(builder.listener);
@@ -24,6 +25,12 @@ public class CustomRouting extends CustomAbstractRouting {
         this.alternativeRoutes = builder.alternativeRoutes;
         this.language = builder.language;
         this.key = builder.key;
+        this.multiple = builder.isMultiple;
+    }
+
+    @Override
+    protected boolean isMultiple() {
+        return this.multiple;
     }
 
     public String constructURL() {
@@ -82,10 +89,11 @@ public class CustomRouting extends CustomAbstractRouting {
         private boolean alternativeRoutes;
         private List<LatLng> waypoints;
         private int avoidKinds;
-        private RoutingListener listener;
+        private CustomRoutingListener listener;
         private boolean optimize;
         private String language;
         private String key;
+        private boolean isMultiple;
 
         public Builder() {
             this.travelMode = TravelMode.DRIVING;
@@ -95,6 +103,7 @@ public class CustomRouting extends CustomAbstractRouting {
             this.listener = null;
             this.optimize = false;
             this.language = null;
+            this.isMultiple = false;
             this.key = null;
         }
 
@@ -124,6 +133,11 @@ public class CustomRouting extends CustomAbstractRouting {
             return this;
         }
 
+        public com.example.ti22_a1_mgs.utils.CustomRouting.Builder multiple(boolean isMultiple) {
+            this.isMultiple = isMultiple;
+            return this;
+        }
+
         public com.example.ti22_a1_mgs.utils.CustomRouting.Builder avoid(AvoidKind... avoids) {
             AvoidKind[] arr$ = avoids;
             int len$ = avoids.length;
@@ -146,7 +160,7 @@ public class CustomRouting extends CustomAbstractRouting {
             return this;
         }
 
-        public com.example.ti22_a1_mgs.utils.CustomRouting.Builder withListener(RoutingListener listener) {
+        public com.example.ti22_a1_mgs.utils.CustomRouting.Builder withListener(CustomRoutingListener listener) {
             this.listener = listener;
             return this;
         }

@@ -36,9 +36,11 @@ public class MapUtil {
 
     private static final float DEFAULT_CAMERA_ZOOM = 15.0f;
 
-
     public static void setMapStyling(Activity activity, GoogleMap googleMap) {
-        //custom
+        //standard
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+//        //custom
 //        try {
 //            boolean success = googleMap.setMapStyle(
 //                    MapStyleOptions.loadRawResourceStyle(
@@ -50,9 +52,6 @@ public class MapUtil {
 //        } catch (Resources.NotFoundException e) {
 //            Log.e(TAG, "Can't find style. Error: ", e);
 //        }
-
-        //standard
-        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 
     public static void initializeMapCamera(GoogleMap googleMap) {

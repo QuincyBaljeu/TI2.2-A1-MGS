@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.directions.route.GoogleParser;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
-import com.directions.route.RoutingListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -13,14 +12,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public abstract class CustomAbstractRouting extends AsyncTask<Void, Void, ArrayList<Route>> {
-    protected ArrayList<RoutingListener> _aListeners = new ArrayList();
+    protected ArrayList<CustomRoutingListener> _aListeners = new ArrayList();
     private RouteException mException = null;
 
-    protected CustomAbstractRouting(RoutingListener listener) {
+    protected CustomAbstractRouting(CustomRoutingListener listener) {
         this.registerListener(listener);
     }
 
-    public void registerListener(RoutingListener mListener) {
+    public void registerListener(CustomRoutingListener mListener) {
         if (mListener != null) {
             this._aListeners.add(mListener);
         }
@@ -31,7 +30,7 @@ public abstract class CustomAbstractRouting extends AsyncTask<Void, Void, ArrayL
         Iterator i$ = this._aListeners.iterator();
 
         while(i$.hasNext()) {
-            RoutingListener mListener = (RoutingListener)i$.next();
+            CustomRoutingListener mListener = (CustomRoutingListener)i$.next();
             mListener.onRoutingStart();
         }
 
@@ -41,7 +40,7 @@ public abstract class CustomAbstractRouting extends AsyncTask<Void, Void, ArrayL
         Iterator i$ = this._aListeners.iterator();
 
         while(i$.hasNext()) {
-            RoutingListener mListener = (RoutingListener)i$.next();
+            CustomRoutingListener mListener = (CustomRoutingListener)i$.next();
             mListener.onRoutingFailure(exception);
         }
 
@@ -51,8 +50,8 @@ public abstract class CustomAbstractRouting extends AsyncTask<Void, Void, ArrayL
         Iterator i$ = this._aListeners.iterator();
 
         while(i$.hasNext()) {
-            RoutingListener mListener = (RoutingListener)i$.next();
-            mListener.onRoutingSuccess(route, shortestRouteIndex);
+            CustomRoutingListener mListener = (CustomRoutingListener)i$.next();
+            mListener.onRoutingSuccess(route, shortestRouteIndex, isMultiple());
         }
 
     }
@@ -61,7 +60,7 @@ public abstract class CustomAbstractRouting extends AsyncTask<Void, Void, ArrayL
         Iterator i$ = this._aListeners.iterator();
 
         while(i$.hasNext()) {
-            RoutingListener mListener = (RoutingListener)i$.next();
+            CustomRoutingListener mListener = (CustomRoutingListener)i$.next();
             mListener.onRoutingCancelled();
         }
 
@@ -78,6 +77,8 @@ public abstract class CustomAbstractRouting extends AsyncTask<Void, Void, ArrayL
 
         return result;
     }
+
+    protected abstract boolean isMultiple();
 
     protected abstract String constructURL();
 
