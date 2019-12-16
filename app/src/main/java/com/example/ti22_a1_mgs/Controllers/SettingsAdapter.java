@@ -1,19 +1,25 @@
 package com.example.ti22_a1_mgs.Controllers;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 
 import com.example.ti22_a1_mgs.Entities.Settings;
 import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
 
+import java.util.Locale;
+
 public class SettingsAdapter {
     private Settings settings;
     private SharedPreferenceManager sharedPreferenceManager;
+    private Context context;
 
     public SettingsAdapter(Context context){
+        this.context = context;
         settings = new Settings();
         sharedPreferenceManager = new SharedPreferenceManager(context);
     }
-
 
     public void setLanguage(String language){
         this.settings.setLanguage(language);
@@ -32,5 +38,27 @@ public class SettingsAdapter {
 
     public Settings getSettings(){
         return this.settings;
+    }
+
+    public void setAppLocale(String localeCode){
+        Resources res = context.getResources();
+        DisplayMetrics displayMetrics = res.getDisplayMetrics();
+        Configuration configuration = res.getConfiguration();
+        configuration.setLocale(new Locale(localeCode.toLowerCase()));
+
+        res.updateConfiguration(configuration,displayMetrics);
+    }
+
+    public String getLocaleCode(String country){
+        switch (country){
+            case "NEDERLANDS":
+                return "nl";
+            case  "ENGLISH":
+                return "en";
+            case"DEUTSCH":
+                return "de";
+                default:
+                    return "en";
+        }
     }
 }

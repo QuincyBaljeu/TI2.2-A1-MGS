@@ -35,6 +35,7 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 String selectedLanguage = newValue.toString().toUpperCase();
                 settingsAdapter.setLanguage(selectedLanguage);
+                settingsAdapter.setAppLocale(settingsAdapter.getLocaleCode(selectedLanguage));
                 Log.d("@/class", settingsAdapter.getSettings().getLanguage());
                 Log.d("@/SharedPreferece", sharedPreferenceManager.loadStringPreference("LANGUAGE", "default"));
                 return true;

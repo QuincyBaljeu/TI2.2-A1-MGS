@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TI2.2-A1-MGS</string>
+    <string name="attachment_summary_off">" Laden Sie Anhänge nur herunter, wenn Sie dazu aufgefordert werden"</string>
+    <string name="attachment_summary_on">Anhänge für eingehende E-Mails automatisch herunterladen</string>
+    <string name="attachment_title">" Laden Sie eingehende Anhänge herunter"</string>
+    <string name="help_title">" Hilfe"</string>
+    <string name="messages_header">" Mitteilungen"</string>
+    <string name="navigation_name_help">" Hilfe"</string>
+    <string name="navigation_name_locations">" Standorte"</string>
+    <string name="navigation_name_map">Karte</string>
+    <string name="navigation_name_settings">Einstellungen</string>
+    <string name="reply_title">Standardantwortaktion</string>
+    <string name="settings_colorblind_title">Farbblindmodus</string>
+    <string name="settings_colorblind_id">Farbblind</string>
+    <string name="settings_language_defaultLanguage">" Englisch"</string>
+    <string name="settings_language_id">" Sprache"</string>
+    <string name="settings_language_title">" Sprache"</string>
+    <string name="settings_satellite_id">" Satellit"</string>
+    <string name="settings_satellite_title">" Satellitenansicht"</string>
+    <string name="signature_title">" Ihre Unterschrift"</string>
+    <string name="sync_header">" Synchronisierer"</string>
+    <string name="sync_title">" Synchronisierer E-Mail regelmäßig"</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">" Benachrichtigungen"</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TI2.2-A1-MGS</string>
+    <string name="attachment_summary_off">Download alleen attachments wanneer handmatig geselecteerd</string>
+    <string name="attachment_summary_on">Download attachments automatisch</string>
+    <string name="attachment_title">Dowload inkomende attachments</string>
+    <string name="help_title">Hulp</string>
+    <string name="messages_header">Berichten</string>
+    <string name="navigation_name_help">Hulp</string>
+    <string name="navigation_name_locations">Locaties</string>
+    <string name="navigation_name_map">Kaart</string>
+    <string name="navigation_name_settings">Instellingen</string>
+    <string name="reply_title">Standaard antwoord actie</string>
+    <string name="settings_colorblind_id">Kleurenblind</string>
+    <string name="settings_colorblind_title">Kleurenblind modus</string>
+    <string name="settings_language_defaultLanguage">Engels</string>
+    <string name="settings_language_id">Taal</string>
+    <string name="settings_language_title">Taal</string>
+    <string name="settings_satellite_id">Satelliet</string>
+    <string name="settings_satellite_title">Satelliet weergave</string>
+    <string name="sync_header">Synchroniseer</string>
+    <string name="signature_title">Handtekening</string>
+    <string name="sync_title">Synchroniseer email periodiek</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <string name="title_notifications">Meldingen</string>
+    <string name="title_dashboard">Dashboard</string>
+</resources>
