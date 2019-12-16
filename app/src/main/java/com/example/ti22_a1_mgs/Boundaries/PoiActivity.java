@@ -20,6 +20,7 @@ public class PoiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi);
 
+
         Toolbar toolbar = findViewById(R.id.custom_action_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.name_poi_activity);
