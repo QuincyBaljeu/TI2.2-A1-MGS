@@ -2,6 +2,7 @@ package com.example.ti22_a1_mgs.Boundaries;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.custom_action_bar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle(R.string.name_main_activity);
 
         context = this;
 
@@ -63,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 return true;
-        }
+            }
 
-    });
+        });
     }
 }

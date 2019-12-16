@@ -2,6 +2,7 @@ package com.example.ti22_a1_mgs.Boundaries;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,10 @@ public class PoiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi);
+
+        Toolbar toolbar = findViewById(R.id.custom_action_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.name_poi_activity);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -2,6 +2,7 @@ package com.example.ti22_a1_mgs.Boundaries;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,10 @@ public class RouteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
+
+        Toolbar toolbar = findViewById(R.id.custom_action_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(title);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -56,13 +61,10 @@ public class RouteActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-
-
-
     }
 
 
-    public void createDataSet(){
+    public void createDataSet() {
         int i;
         int random;
 
@@ -70,8 +72,8 @@ public class RouteActivity extends AppCompatActivity {
         int min = 1;
 
         int range = max - min + 1;
-        for (i = 0; i < 10; i++){
-            random = (int)(Math.random() * range) + min;
+        for (i = 0; i < 10; i++) {
+            random = (int) (Math.random() * range) + min;
             pointsOI.add(new PointOfInterestTestData("PointOfInterest:" + random, random));
         }
     }
