@@ -2,14 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <ListPreference
-        android:key="@string/settings_language_id"
-        android:title="@string/settings_language_title"
-        android:entries="@array/settings_availableLanguages"
-        android:entryValues="@array/settings_availableLanguages"
-        android:defaultValue="@string/settings_language_defaultLanguage"
-       />
-
     <CheckBoxPreference
         android:key="@string/settings_satellite_id"
         android:title="@string/settings_satellite_title"

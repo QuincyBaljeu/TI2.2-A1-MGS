@@ -5,6 +5,8 @@ import android.content.Context;
 import com.example.ti22_a1_mgs.Entities.HelpData;
 import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
 
+import java.util.Locale;
+
 public class HelpAdapter {
 
     private SharedPreferenceManager sharedPreferenceManager;
@@ -14,17 +16,16 @@ public class HelpAdapter {
     }
 
     public String requestHelpText(){
-        String selectedLanguage = sharedPreferenceManager.loadStringPreference("LANGUAGE", "default");
-
+        String selectedLanguage = Locale.getDefault().getLanguage();
         switch (selectedLanguage) {
-            case "NEDERLANDS":
+            case "nl":
                 return HelpData.getHelpTextNederlands();
-            case "ENGLISH":
+            case "en":
                 return HelpData.getHelpTextEnglish();
-            case "DEUTSCH":
+            case "de":
                 return HelpData.getHelpTextDeutsch();
-                default:
-                    return HelpData.getHelpTextEnglish();
+            default:
+                return HelpData.getHelpTextEnglish();
         }
 
     }

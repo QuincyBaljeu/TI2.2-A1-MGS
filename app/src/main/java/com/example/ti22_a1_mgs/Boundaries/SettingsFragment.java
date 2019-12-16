@@ -29,20 +29,19 @@ public class SettingsFragment extends PreferenceFragment {
         settingsAdapter = new SettingsAdapter(this.getActivity().getBaseContext());
         sharedPreferenceManager = new SharedPreferenceManager(this.getActivity().getBaseContext());
 
-        final ListPreference languagePreference = (ListPreference) findPreference("Language");
-        languagePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String selectedLanguage = newValue.toString().toUpperCase();
-                settingsAdapter.setLanguage(selectedLanguage);
-                settingsAdapter.setAppLocale(settingsAdapter.getLocaleCode(selectedLanguage));
-                Log.d("@/class", settingsAdapter.getSettings().getLanguage());
-                Log.d("@/SharedPreferece", sharedPreferenceManager.loadStringPreference("LANGUAGE", "default"));
-                return true;
-            }
-        });
+//        final ListPreference languagePreference = (ListPreference) findPreference("Language");
+//        languagePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                String selectedLanguage = newValue.toString().toUpperCase();
+//                settingsAdapter.setLanguage(selectedLanguage);
+//                Log.d("@/class", settingsAdapter.getSettings().getLanguage());
+//                Log.d("@/SharedPreferece", sharedPreferenceManager.loadStringPreference("LANGUAGE", "default"));
+//                return true;
+//            }
+//        });
 
-        Preference satellitePreference = findPreference("Satellite");
+        Preference satellitePreference = findPreference(getResources().getString(R.string.settings_satellite_id));
         satellitePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -55,7 +54,7 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
-        Preference colorblindPreference = findPreference("Colorblind");
+        Preference colorblindPreference = findPreference(getResources().getString(R.string.settings_colorblind_id));
         colorblindPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {

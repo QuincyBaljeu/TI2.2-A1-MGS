@@ -21,10 +21,10 @@ public class SettingsAdapter {
         sharedPreferenceManager = new SharedPreferenceManager(context);
     }
 
-    public void setLanguage(String language){
-        this.settings.setLanguage(language);
-        sharedPreferenceManager.savePreference("LANGUAGE", language, SharedPreferenceManager.Type.STRING);
-    }
+//    public void setLanguage(String language){
+//        this.settings.setLanguage(language);
+//        sharedPreferenceManager.savePreference("LANGUAGE", language, SharedPreferenceManager.Type.STRING);
+//    }
 
     public void setSatellite(boolean toggle){
         this.settings.setSatelliteMode(toggle);
@@ -40,25 +40,4 @@ public class SettingsAdapter {
         return this.settings;
     }
 
-    public void setAppLocale(String localeCode){
-        Resources res = context.getResources();
-        DisplayMetrics displayMetrics = res.getDisplayMetrics();
-        Configuration configuration = res.getConfiguration();
-        configuration.setLocale(new Locale(localeCode.toLowerCase()));
-
-        res.updateConfiguration(configuration,displayMetrics);
-    }
-
-    public String getLocaleCode(String country){
-        switch (country){
-            case "NEDERLANDS":
-                return "nl";
-            case  "ENGLISH":
-                return "en";
-            case"DEUTSCH":
-                return "de";
-                default:
-                    return "en";
-        }
-    }
 }
