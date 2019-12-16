@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -20,11 +22,13 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.RoutingListener;
+import com.example.ti22_a1_mgs.Database.RouteViewModel;
+import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
+import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.utils.LocationUtil;
 import com.example.ti22_a1_mgs.utils.MapUtil;
 import com.example.ti22_a1_mgs.utils.MarkerUtil;
@@ -76,6 +80,8 @@ public class MapsActivity extends AppCompatActivity
 
     //TODO migrate to FusedLocationProvider
 
+
+    private RouteViewModel viewModelThing;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +92,42 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
+
+//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+//            @Override
+//            public void onChanged(List<Waypoint> waypoints) {
+//                //stuff that needs to happen when list is edited
+//                for (Waypoint waypoint : waypoints) {
+//                    Log.wtf(TAG, waypoint.toString());
+//                    printPointOfInterest(waypoint);
+//                }
+//            }
+//        });
+//
+//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
+//            @Override
+//            public void onChanged(List<PointOfInterest> pointOfInterests) {
+//                //stuff that needs to happen when list is edited
+//                for (PointOfInterest pointOfInterest : pointOfInterests) {
+//                    Log.wtf(TAG, pointOfInterest.toString());
+//                }
+//            }
+//        });
     }
+
+//    private void printPointOfInterest(Waypoint waypoint) {
+//        this.viewModelThing.getPointOfInterestByLocationName(waypoint.getPointOfInterestId()).observe(this, new Observer<List<PointOfInterest>>() {
+//            @Override
+//            public void onChanged(List<PointOfInterest> pointOfInterests) {
+//                for (PointOfInterest pointOfInterest : pointOfInterests) {
+//                    Log.wtf("Je hebt Hem Kut Wohoo", pointOfInterest.toString());
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onPause() {
@@ -118,7 +159,7 @@ public class MapsActivity extends AppCompatActivity
 
             map.setOnInfoWindowClickListener(this);
         } else {
-            PopupUtil.showNotification(this, "ERROR", "Failed to load in tools for location listening.", this);
+            PopupUtil.showAlertDialog(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
     }
 
@@ -135,12 +176,12 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-        PopupUtil.showNotification(this, "ERROR", "Your connection is suspended!", this);
+        PopupUtil.showAlertDialog(this, "ERROR", "Your connection is suspended!", this);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        PopupUtil.showNotification(this, "ERROR " + connectionResult.getErrorCode(), connectionResult.getErrorMessage(), this);
+        PopupUtil.showAlertDialog(this, "ERROR " + connectionResult.getErrorCode(), connectionResult.getErrorMessage(), this);
     }
 
     @Override
