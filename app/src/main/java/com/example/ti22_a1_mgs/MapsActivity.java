@@ -2,6 +2,8 @@ package com.example.ti22_a1_mgs;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -14,6 +16,9 @@ import android.widget.Toast;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.RoutingListener;
+import com.example.ti22_a1_mgs.Database.RouteViewModel;
+import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
+import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.utils.LocationUtil;
 import com.example.ti22_a1_mgs.utils.MapUtil;
 import com.example.ti22_a1_mgs.utils.PopupUtil;
@@ -32,6 +37,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
@@ -51,6 +57,8 @@ public class MapsActivity extends AppCompatActivity
 
     //TODO migrate to FusedLocationProvider
 
+
+    private RouteViewModel viewModelThing;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +69,42 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
+
+//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+//            @Override
+//            public void onChanged(List<Waypoint> waypoints) {
+//                //stuff that needs to happen when list is edited
+//                for (Waypoint waypoint : waypoints) {
+//                    Log.wtf(TAG, waypoint.toString());
+//                    printPointOfInterest(waypoint);
+//                }
+//            }
+//        });
+//
+//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
+//            @Override
+//            public void onChanged(List<PointOfInterest> pointOfInterests) {
+//                //stuff that needs to happen when list is edited
+//                for (PointOfInterest pointOfInterest : pointOfInterests) {
+//                    Log.wtf(TAG, pointOfInterest.toString());
+//                }
+//            }
+//        });
     }
+
+//    private void printPointOfInterest(Waypoint waypoint) {
+//        this.viewModelThing.getPointOfInterestByLocationName(waypoint.getPointOfInterestId()).observe(this, new Observer<List<PointOfInterest>>() {
+//            @Override
+//            public void onChanged(List<PointOfInterest> pointOfInterests) {
+//                for (PointOfInterest pointOfInterest : pointOfInterests) {
+//                    Log.wtf("Je hebt Hem Kut Wohoo", pointOfInterest.toString());
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onPause() {

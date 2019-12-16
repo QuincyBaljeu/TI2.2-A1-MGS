@@ -27,4 +27,7 @@ public interface PointOfInterestDao {
 
     @Query("SELECT * FROM point_of_interest_table ORDER BY location DESC")
     LiveData<List<PointOfInterest>> getAllPointsOfInterest();
+
+    @Query("SELECT * FROM point_of_interest_table WHERE location=:locationName")
+    LiveData<List<PointOfInterest>> findPointOfInterestByName(final String locationName);
 }
