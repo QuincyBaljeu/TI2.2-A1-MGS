@@ -102,25 +102,25 @@ public class MapsActivity extends AppCompatActivity
 //                this.viewModelThing.getBlindWallsBreda().getAllWalls(), this
 //        );
 
-        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
-            @Override
-            public void onChanged(List<Waypoint> waypoints) {
-                //stuff that needs to happen when list is edited
-                for (Waypoint waypoint : waypoints) {
+//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+//            @Override
+//            public void onChanged(List<Waypoint> waypoints) {
+//                //stuff that needs to happen when list is edited
+//                for (Waypoint waypoint : waypoints) {
 //                    Log.wtf(TAG, waypoint.toString());
-                }
-            }
-        });
-
-        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
-            @Override
-            public void onChanged(List<PointOfInterest> pointOfInterests) {
-                //stuff that needs to happen when list is edited
-                for (PointOfInterest pointOfInterest : pointOfInterests) {
+//                }
+//            }
+//        });
+//
+//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
+//            @Override
+//            public void onChanged(List<PointOfInterest> pointOfInterests) {
+//                //stuff that needs to happen when list is edited
+//                for (PointOfInterest pointOfInterest : pointOfInterests) {
 //                    Log.wtf(TAG, pointOfInterest.toString());
-                }
-            }
-        });
+//                }
+//            }
+//        });
     }
 
 //    private void printPointOfInterest(Waypoint waypoint) {
@@ -161,11 +161,33 @@ public class MapsActivity extends AppCompatActivity
 
             MapUtil.setMapSettings(map);
 //            MapUtil.initializeMapCamera(map);
+            drawRoute(this);
 
             map.setOnInfoWindowClickListener(this);
         } else {
             PopupUtil.showAlertDialog(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
+    }
+
+    private void drawRoute(final RoutingListener listener) {
+        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+            @Override
+            public void onChanged(List<Waypoint> waypoints) {
+                ArrayList<LatLng> locations = new ArrayList<>();
+                for (int i = 0; i < 25; i++) {
+                    locations.add(new LatLng(waypoints.get(i).getLat(), waypoints.get(i).getLon()));
+                    MarkerUtil.addDefaultMarker(map, locations.get(i), "Waypoint " + i, UUID.randomUUID().toString().substring(0,10));
+                }
+                Log.wtf(TAG, "Drawing the route");
+                if (waypoints.isEmpty()) {
+                    Log.wtf(TAG, locations.toString());
+                    return;
+                }
+                Log.wtf(TAG, locations.toString());
+
+                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+            }
+        });
     }
 
     @Override
