@@ -14,6 +14,7 @@ import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
 import com.example.ti22_a1_mgs.Database.blindwalls.JsonUtil;
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
+import com.example.ti22_a1_mgs.POIAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,9 @@ public class RouteViewModel extends AndroidViewModel {
     private static final String TAG = "RouteViewModel";
 
     private Reposetory repository;
-    private BlindWallsBreda blindWallsBreda;
     private LiveData<List<Waypoint>> allWayPoints;
     private LiveData<List<PointOfInterest>> allPointsOfInterest;
+    private POIAdapter poiAdapter;
 
     public RouteViewModel(@NonNull Application application) {
         super(application);
@@ -36,6 +37,7 @@ public class RouteViewModel extends AndroidViewModel {
 //        fillDatabaseFromData(blindWallsBreda.getAllWalls());      Moved to a activity
         this.allWayPoints = repository.getAllWaypoints();
         this.allPointsOfInterest = repository.getAllPointsOfInterest();
+        this.poiAdapter = new POIAdapter();
     }
 
     public void deleteAllDatabaseContents() {
@@ -69,6 +71,7 @@ public class RouteViewModel extends AndroidViewModel {
 
         }
     }
+
 
     public void insert(Waypoint waypoint) {
         this.repository.insert(waypoint);
@@ -110,11 +113,6 @@ public class RouteViewModel extends AndroidViewModel {
         this.repository.deleteAllPointsOfInterest();
     }
 
-    public void onAPICallback(List<PointOfInterest> blindwalls) {
-    }
-
-    ;
-
     public LiveData<List<PointOfInterest>> getPointOfInterestByLocationName(int locationId) {
         LiveData<List<PointOfInterest>> pointOfInterest = null;
         try {
@@ -132,7 +130,13 @@ public class RouteViewModel extends AndroidViewModel {
         return pointOfInterest;
     }
 
-    public BlindWallsBreda getBlindWallsBreda() {
-        return blindWallsBreda;
+    public POIAdapter getPoiAdapter() { return poiAdapter;}
+    public void reloadList(List<PointOfInterest> points){
+
+        poiAdapter.setPointOfInterests(points);
+        System.out.println(points);
+        poiAdapter.notifyDataSetChanged();
     }
+    public void onAPICallback(List<PointOfInterest> blindwalls) {};
+
 }

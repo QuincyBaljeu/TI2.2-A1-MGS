@@ -14,7 +14,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@color/colorPrimary" />
 
     <ImageView
@@ -44,7 +43,6 @@
         android:layout_marginStart="32dp"
         android:text="TextView"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/PointOfViewImage"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
