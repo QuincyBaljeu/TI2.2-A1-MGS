@@ -21,6 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/MGS_API_MAPS_KEY" />
         <activity android:name=".Boundaries.MapActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.SettingsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.PoiActivity" android:screenOrientation="portrait"/>
@@ -29,10 +32,9 @@
         <activity android:name=".Boundaries.MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/MGS_API_MAPS_KEY" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
