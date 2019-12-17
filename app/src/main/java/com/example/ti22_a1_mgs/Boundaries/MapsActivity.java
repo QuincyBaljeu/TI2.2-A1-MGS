@@ -174,12 +174,14 @@ public class MapsActivity extends AppCompatActivity
                 while (cloneWaypoint.size() != 0) {
 
                     LatLng newPos = new LatLng(cloneWaypoint.get(0).getLat(), cloneWaypoint.get(0).getLon());
+                    //checks if waypoint has been visited if not it adds to the draw list
                     if (!cloneWaypoint.get(0).isVisited()) {
                         locations.add(newPos);
+                        
+                        //draw marker on map
+                        MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
                     }
 
-                    //draw marker on map
-                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
 
                     //if it hits the max possible requests
                     if (locations.size() == 25) {
