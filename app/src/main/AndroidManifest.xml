@@ -27,10 +27,10 @@
         <activity android:name=".Boundaries.MapsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.SettingsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.PoiActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".Boundaries.RouteActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.HelpActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Boundaries.RouteActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.MainActivity" android:screenOrientation="portrait">
-            <intent-filter>
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
