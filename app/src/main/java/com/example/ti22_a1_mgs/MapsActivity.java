@@ -157,24 +157,63 @@ public class MapsActivity extends AppCompatActivity
         map.setOnMapLoadedCallback(this);
     }
 
+    private void drawTestRoute(final CustomRoutingListener listener) {
+        List<LatLng> latLngList = new ArrayList<>();
+        latLngList.add(MapUtil.getLatLngFromLocation(currentLocation));
+        latLngList.add(new LatLng(51.571915, 4.768323));
+        latLngList.add(new LatLng(51.53083, 4.46528));
+        latLngList.add(new LatLng(51.53083, 4.46528));
+        latLngList.add(new LatLng(51.644114, 4.599312));
+
+        //create current polyline
+        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation), latLngList.get(1), listener);
+
+        //remove first entry because it's already used
+        latLngList.remove(0);
+
+        //create the rest of the polylines
+        RouteUtil.routingWaypointsRequest(this, latLngList, listener);
+
+        //later you can use marker object
+        for (int i = 0; i < latLngList.size(); i++) {
+            MarkerUtil.addCustomMarker(map, latLngList.get(i), "Waypoint", UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
+
+        }
+    }
+
     private void drawRoute(final CustomRoutingListener listener) {
         this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
             @Override
             public void onChanged(List<Waypoint> waypoints) {
-                ArrayList<LatLng> locations = new ArrayList<>();
+                //clear map
+                MapUtil.clearMap(map);
 
+                //create lists for data tracking
+                ArrayList<LatLng> locations = new ArrayList<>();
                 ArrayList<Waypoint> cloneWaypoint = new ArrayList<>(waypoints);
+
+                //create current polyline
+                if(cloneWaypoint.size() != 0)
+                    RouteUtil.routingWaypointRequest(getApplicationContext(), MapUtil.getLatLngFromLocation(currentLocation), new LatLng(cloneWaypoint.get(0).getLat(),cloneWaypoint.get(0).getLon()), listener);
+
+                //create the rest of the polylines
                 while (cloneWaypoint.size() != 0) {
+
                     LatLng newPos = new LatLng(cloneWaypoint.get(0).getLat(), cloneWaypoint.get(0).getLon());
                     locations.add(newPos);
-                    MarkerUtil.addDefaultMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0,10));
+
+                    //draw marker on map
+                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0,10),MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
+
+                    //if it hits the max possible requests
                     if (locations.size() == 25) {
                         RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
                         locations.clear();
                     }
+
                     cloneWaypoint.remove(cloneWaypoint.get(0));
                 }
-                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+//                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
 /*
                 for (int i = 0; i < 25; i++) {
                     locations.add(new LatLng(waypoints.get(i).getLat(), waypoints.get(i).getLon()));
@@ -219,29 +258,8 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMapLoaded() {
-//        drawRoute(this);
-
-        List<LatLng> latLngList = new ArrayList<>();
-        latLngList.add(MapUtil.getLatLngFromLocation(currentLocation));
-        latLngList.add(new LatLng(51.571915, 4.768323));
-        latLngList.add(new LatLng(51.53083, 4.46528));
-        latLngList.add(new LatLng(51.53083, 4.46528));
-        latLngList.add(new LatLng(51.644114, 4.599312));
-
-        //create current polyline
-        RouteUtil.routingWaypointRequest(this, MapUtil.getLatLngFromLocation(currentLocation), latLngList.get(1), this);
-
-        //remove first entry because it's already used
-        latLngList.remove(0);
-
-        //create the rest of the polylines
-        RouteUtil.routingWaypointsRequest(this, latLngList, this);
-
-        //later you can use marker object
-        for (int i = 0; i < latLngList.size(); i++) {
-            MarkerUtil.addCustomMarker(map, latLngList.get(i), "Waypoint", UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
-
-        }
+       drawRoute(this);
+//        drawTestRoute(this);
     }
 
     @Override

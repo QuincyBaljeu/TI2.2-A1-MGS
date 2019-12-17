@@ -58,7 +58,6 @@ public class MarkerUtil {
     }
 
     public static Bitmap createCustomMarkerBitmap(Context context, @DrawableRes int resource) {
-
         View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
 
         CircleImageView markerImage = marker.findViewById(R.id.circle_image_view);
