@@ -97,9 +97,9 @@ public class GeoFencing extends BroadcastReceiver {
             for (Geofence geofence : triggeringGeofences) {
                 String key = geofence.getRequestId();
 
-                Waypoint currentWaypoint = reposetory.getWaypoint(key);
-                currentWaypoint.setVisited(true);
-                reposetory.update(currentWaypoint);
+//                Waypoint currentWaypoint = reposetory.getWaypoint(Integer.parseInt(key));
+//                currentWaypoint.setVisited(true);
+//                reposetory.update(currentWaypoint);
 
                 keysToRemove.add(key);
 

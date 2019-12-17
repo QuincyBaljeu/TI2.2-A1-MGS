@@ -42,7 +42,7 @@ public abstract class ExampleDatabaseUsingAcivity extends AppCompatActivity {
         });
 
         //
-        this.viewModelThing.insert(new PointOfInterest(1, "het startpunt", "The start", null));
+        this.viewModelThing.insert(new PointOfInterest(1, "asdadsasdasd", "het startpunt", "The start", null));
         this.viewModelThing.insert(new Waypoint(1, 3.24, 214.42, 1));
 
     }

@@ -94,32 +94,6 @@ public class MapsActivity extends AppCompatActivity
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
 
-//        this.viewModelThing.deleteAllDatabaseContents();
-
-
-//        this.viewModelThing.fillDatabaseFromData(
-//                this.viewModelThing.getBlindWallsBreda().getAllWalls(), this
-//        );
-
-//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
-//            @Override
-//            public void onChanged(List<Waypoint> waypoints) {
-//                //stuff that needs to happen when list is edited
-//                for (Waypoint waypoint : waypoints) {
-//                    Log.wtf(TAG, waypoint.toString());
-//                }
-//            }
-//        });
-//
-//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
-//            @Override
-//            public void onChanged(List<PointOfInterest> pointOfInterests) {
-//                //stuff that needs to happen when list is edited
-//                for (PointOfInterest pointOfInterest : pointOfInterests) {
-//                    Log.wtf(TAG, pointOfInterest.toString());
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -177,7 +151,7 @@ public class MapsActivity extends AppCompatActivity
                     //checks if waypoint has been visited if not it adds to the draw list
                     if (!cloneWaypoint.get(0).isVisited()) {
                         locations.add(newPos);
-                        
+
                         //draw marker on map
                         MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
                     }
