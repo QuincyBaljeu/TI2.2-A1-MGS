@@ -14,7 +14,7 @@ import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
 import com.example.ti22_a1_mgs.Database.blindwalls.JsonUtil;
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
-import com.example.ti22_a1_mgs.Boundaries.POIAdapter;
+import com.example.ti22_a1_mgs.Controllers.POIAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

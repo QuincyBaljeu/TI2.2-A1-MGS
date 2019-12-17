@@ -19,7 +19,7 @@ public class BlindWallsBreda {
 
     private List<BlindWall> blindWalls = new ArrayList<>();
 
-    private BlindWallsBreda() {
+    public BlindWallsBreda() {
     }
 
     public List<BlindWall> getAllWalls() {

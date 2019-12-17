@@ -1,4 +1,4 @@
-package com.example.ti22_a1_mgs.Boundaries;
+package com.example.ti22_a1_mgs.Controllers;
 
 import android.view.LayoutInflater;
 import android.view.View;
