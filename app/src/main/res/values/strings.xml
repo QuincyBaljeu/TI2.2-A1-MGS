@@ -32,6 +32,9 @@
     <string name="name_settings_activity" translatable="false">Settings</string>
     <string name="settings_language_id">Language</string>
 
+    <string name="preference_id" translatable="false">preference</string>
+    <string name="preferences_database_loaded" translatable="false">databaseLoaded</string>
+
     <string-array name="settings_availableLanguages">
         <item>English</item>
         <item>Nederlands</item>
