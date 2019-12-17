@@ -15,7 +15,7 @@ import com.example.ti22_a1_mgs.Database.entities.PointOfInterestDao;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.Database.entities.WaypointDao;
 
-@Database(entities = {Waypoint.class, PointOfInterest.class}, version = 3, exportSchema = false)
+@Database(entities = {Waypoint.class, PointOfInterest.class}, version = 4, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class RouteDatabase extends RoomDatabase {
 

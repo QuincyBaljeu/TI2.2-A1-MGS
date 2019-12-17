@@ -52,6 +52,7 @@ public class RouteViewModel extends AndroidViewModel {
         for (final BlindWall wall : blindWalls) {
             repository.insert(new PointOfInterest(
                     wall.getWallId(),
+                    wall.getAddress(),
                     wall.getDescriptionDutch(),
                     wall.getDescriptionEnglish(),
                     (ArrayList<String>) wall.getImagesUrls()));
