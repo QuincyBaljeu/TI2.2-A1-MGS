@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent intentMap = new Intent(
                                 context,
-                                MapActivity.class);
+                                MapsActivity.class);
                         context.startActivity(intentMap);
                         break;
 

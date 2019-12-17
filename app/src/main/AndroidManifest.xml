@@ -24,7 +24,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/MGS_API_MAPS_KEY" />
-        <activity android:name=".Boundaries.MapActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Boundaries.MapsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.SettingsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.PoiActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Boundaries.RouteActivity" android:screenOrientation="portrait"/>
