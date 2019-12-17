@@ -2,21 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <ListPreference
-        android:key="languageSelector"
-        android:title="@string/settings_language"
-        android:entries="@array/settings_availableLanguages"
-        android:entryValues="@array/settings_availableLanguages"
-        android:defaultValue="@string/settings_defaultLanguage"
-        android:summary=""/>
-
-
-
+    <CheckBoxPreference
+        android:key="@string/settings_satellite_id"
+        android:title="@string/settings_satellite_title"
+        android:defaultValue="false"
+        />
 
     <CheckBoxPreference
-        android:key="colorblindToggle"
-        android:title="@string/settings_colorblind"
-        android:summary=""
+        android:key="@string/settings_colorblind_id"
+        android:title="@string/settings_colorblind_title"
         android:defaultValue="false"/>
 
 

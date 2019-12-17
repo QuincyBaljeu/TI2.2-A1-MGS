@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.ti22_a1_mgs.Controllers.HelpAdapter;
 import com.example.ti22_a1_mgs.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -17,6 +18,7 @@ import java.util.Locale;
 
 public class HelpActivity extends AppCompatActivity {
 
+    private HelpAdapter helpAdapter;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +30,7 @@ public class HelpActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.name_help_activity);
 
         TextView helpText = findViewById(R.id.text_helpMenu);
+        helpAdapter = new HelpAdapter(this.getBaseContext());
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -46,25 +49,19 @@ public class HelpActivity extends AppCompatActivity {
 
         });
 
-        if (Locale.getDefault().getLanguage().equals("nl")) {
+        helpText.setText(helpAdapter.requestHelpText());
 
-            helpText.setText("Selecteer het route menu \n" +
-                    "Selecteer een route uit de lijst \n" +
-                    "Open het kaart menu \n" +
-                    "Volg de route");
-
-        } else if (Locale.getDefault().getLanguage().equals("en")) {
-
-            helpText.setText("Select the routes menu \n" +
-                    "Select a route from the list \n" +
-                    "Open the map menu \n" +
-                    "Follow the given route!");
-
-        } else {
-            helpText.setText("Select the routes menu \n" +
-                    "Select a route from the list \n" +
-                    "Open the map menu \n" +
-                    "Follow the given route!");
-        }
+//        if(Locale.getDefault().getLanguage().equals("nl")){
+//
+//            helpText.setText(helpAdapter.getHelpTextNederlands());
+//
+//        } else if(Locale.getDefault().getLanguage().equals("en")){
+//
+//            helpText.setText(helpAdapter.getHelpTextEnglish());
+//
+//        }
+//        else {
+//            helpText.setText(helpAdapter.getHelpTextEnglish());
+//        }
     }
 }
