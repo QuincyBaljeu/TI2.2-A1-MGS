@@ -9,6 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.utils.PopupUtil;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -30,13 +31,22 @@ public class GeoFencing extends BroadcastReceiver {
     private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
 
+    private static final String TAG = "GEOFENCING";
+
     private Activity activity;
 
     public GeoFencing(Activity activity) {
         this.activity = activity;
         geofencingClient = LocationServices.getGeofencingClient(activity);
         geofenceList = new ArrayList<>();
-        addGeofence(3, 3, "key");
+
+    }
+
+    public void setGeofencingList(List<Waypoint> waypoints){
+
+        for (Waypoint waypoint: waypoints){
+            addGeofence(waypoint.getLat(), waypoint.getLon(), "" + waypoint.getNumber());
+        }
         GeofencingRequest request = getGeofencingRequest();
         geofencingClient.addGeofences(request, getGeoFencePendingIntent())
                 .addOnSuccessListener(activity, new OnSuccessListener<Void>() {
@@ -54,8 +64,6 @@ public class GeoFencing extends BroadcastReceiver {
                     }
                 });
     }
-
-    private static final String TAG = "GEOFENCING";
 
     //For receiving Geofence Intents
     @Override
