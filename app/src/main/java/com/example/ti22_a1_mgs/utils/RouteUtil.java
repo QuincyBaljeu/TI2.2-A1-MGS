@@ -42,19 +42,4 @@ public class RouteUtil {
                 .build();
         routing.execute();
     }
-
-    public static void addToList(Polyline polyline){
-        polylines.add(polyline);
-    }
-
-    public static List<Polyline> getList(){
-        return polylines;
-    }
-
-    public static  void clearList(){
-        for(Polyline line : polylines){
-            line.remove();
-        }
-        polylines.clear();
-    }
 }

@@ -24,4 +24,14 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="56dp" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view_main"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_back" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

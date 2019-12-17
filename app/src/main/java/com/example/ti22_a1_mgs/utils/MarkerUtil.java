@@ -3,6 +3,9 @@ package com.example.ti22_a1_mgs.utils;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -38,5 +41,14 @@ public class MarkerUtil {
                 .resize(DEFAULT_ICON_WIDTH, DEFAULT_ICON_HEIGHT)
                 .into(target)
         ;
+    }
+
+    public static void addDefaultMarker(GoogleMap googleMap, LatLng latLng, String title, String subtitle) {
+        MarkerOptions tempMarker = new MarkerOptions()
+                .position(latLng)
+                .title(title)
+                .snippet(subtitle);
+
+        googleMap.addMarker(tempMarker);
     }
 }

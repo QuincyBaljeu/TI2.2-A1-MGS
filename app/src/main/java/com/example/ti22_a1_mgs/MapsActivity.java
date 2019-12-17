@@ -71,6 +71,7 @@ import com.squareup.picasso.Transformation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
@@ -90,7 +91,7 @@ public class MapsActivity extends AppCompatActivity
     private Location currentLocation;
     private LocationRequest locationRequest;
 
-    //TODO migrate to FusedLocationProvider
+    private RouteViewModel viewModelThing;
 
 
     private RouteViewModel viewModelThing;
@@ -111,13 +112,19 @@ public class MapsActivity extends AppCompatActivity
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
 
+//        this.viewModelThing.deleteAllDatabaseContents();
+
+
+//        this.viewModelThing.fillDatabaseFromData(
+//                this.viewModelThing.getBlindWallsBreda().getAllWalls(), this
+//        );
+
 //        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
 //            @Override
 //            public void onChanged(List<Waypoint> waypoints) {
 //                //stuff that needs to happen when list is edited
 //                for (Waypoint waypoint : waypoints) {
 //                    Log.wtf(TAG, waypoint.toString());
-//                    printPointOfInterest(waypoint);
 //                }
 //            }
 //        });
@@ -171,11 +178,51 @@ public class MapsActivity extends AppCompatActivity
 
             MapUtil.setMapSettings(map);
 //            MapUtil.initializeMapCamera(map);
+            drawRoute(this);
 
             map.setOnInfoWindowClickListener(this);
         } else {
             PopupUtil.showAlertDialog(this, "ERROR", "Failed to load in tools for location listening.", this);
         }
+    }
+
+    private void drawRoute(final RoutingListener listener) {
+        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+            @Override
+            public void onChanged(List<Waypoint> waypoints) {
+                ArrayList<LatLng> locations = new ArrayList<>();
+
+                ArrayList<Waypoint> cloneWaypoint = new ArrayList<>(waypoints);
+                while (cloneWaypoint.size() != 0) {
+                    LatLng newPos = new LatLng(cloneWaypoint.get(0).getLat(), cloneWaypoint.get(0).getLon());
+                    locations.add(newPos);
+                    MarkerUtil.addDefaultMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0,10));
+                    if (locations.size() == 25) {
+                        RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                        locations.clear();
+                    }
+                    cloneWaypoint.remove(cloneWaypoint.get(0));
+                }
+                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+/*
+                for (int i = 0; i < 25; i++) {
+                    locations.add(new LatLng(waypoints.get(i).getLat(), waypoints.get(i).getLon()));
+                    MarkerUtil.addDefaultMarker(map, locations.get(i), "Waypoint " + i, UUID.randomUUID().toString().substring(0,10));
+
+                }
+                Log.wtf(TAG, "Drawing the route");
+                if (waypoints.isEmpty()) {
+                    Log.wtf(TAG, locations.toString());
+                    return;
+                }
+                Log.wtf(TAG, locations.toString());
+
+                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                */
+
+            }
+        });
     }
 
     @Override
@@ -230,8 +277,7 @@ public class MapsActivity extends AppCompatActivity
             polyOptions.color(ContextCompat.getColor(this, R.color.colorAccent));
             polyOptions.width(10 + i * 3);
             polyOptions.addAll(routeArrayList.get(i).getPoints());
-            Polyline polyline = map.addPolyline(polyOptions);
-            RouteUtil.addToList(polyline);
+            map.addPolyline(polyOptions);
         }
     }
 
@@ -250,12 +296,10 @@ public class MapsActivity extends AppCompatActivity
 
         RouteUtil.routingWaypointsRequest(this, latLngList, this);
 
-        final String imageUrl = "https://blindwalls.gallery/wp-content/uploads/2019/04/2015.09.23_GDFB_RUTGER_TERMOHLEN_Ralph_Roelse_Breda_NL_009-2000x1333.jpg";
-
         //later you can use marker object
         for (int i = 0; i < latLngList.size(); i++) {
             pos = i;
-            MarkerUtil.getIconImage(imageUrl, MapsActivity.this);
+            MarkerUtil.addDefaultMarker(map, latLngList.get(i), "Waypoint " + pos, UUID.randomUUID().toString().substring(0,10));
         }
     }
 
