@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
@@ -61,11 +60,11 @@ public class MapsActivity extends AppCompatActivity
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private Location userLocation;
-    private LocationRequest locationRequest;
+    private LocationRequest locationRequest; //strong reference
 
     private RouteViewModel viewModelThing;
 
-    //todo remove polylines
+    private boolean loadingFirstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,36 +99,14 @@ public class MapsActivity extends AppCompatActivity
 
 //        this.viewModelThing.deleteAllDatabaseContents();
 
-
 //        this.viewModelThing.fillDatabaseFromData(
 //                this.viewModelThing.getBlindWallsBreda().getAllWalls(), this
 //        );
-
-//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
-//            @Override
-//            public void onChanged(List<Waypoint> waypoints) {
-//                //stuff that needs to happen when list is edited
-//                for (Waypoint waypoint : waypoints) {
-//                    Log.wtf(TAG, waypoint.toString());
-//                }
-//            }
-//        });
-//
-//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
-//            @Override
-//            public void onChanged(List<PointOfInterest> pointOfInterests) {
-//                //stuff that needs to happen when list is edited
-//                for (PointOfInterest pointOfInterest : pointOfInterests) {
-//                    Log.wtf(TAG, pointOfInterest.toString());
-//                }
-//            }
-//        });
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         //stop location updates when Activity is no longer active
         if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
@@ -141,6 +118,10 @@ public class MapsActivity extends AppCompatActivity
         map = googleMap;
         MapUtil.setMapStyling(this, map);
 
+        initializeMapClients();
+    }
+
+    private void initializeMapClients() {
         boolean success = LocationUtil.checkLocationPermission(this);
 
         if (success) {
@@ -156,7 +137,7 @@ public class MapsActivity extends AppCompatActivity
             map.setOnInfoWindowClickListener(this);
             map.setOnMapLoadedCallback(this);
         } else {
-            PopupUtil.showAlertDialog(this, "ERROR", "Failed to load in tools for location listening.", this);
+            finish();
         }
     }
 
@@ -208,7 +189,7 @@ public class MapsActivity extends AppCompatActivity
         });
     }
 
-    private void updateGeofencing(){
+    private void updateGeofencing() {
 
         final Activity activity = this;
         final LifecycleOwner lifecycleOwner = this;
@@ -216,7 +197,7 @@ public class MapsActivity extends AppCompatActivity
         this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
             @Override
             public void onChanged(List<Waypoint> waypoints) {
-                if (waypoints.isEmpty()){
+                if (waypoints.isEmpty()) {
                     return;
                 }
                 final GeoFencing geoFencing = new GeoFencing(activity, lifecycleOwner);
@@ -248,14 +229,18 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMapLoaded() {
-       drawRoute(this);
-       updateGeofencing();
-//        drawTestRoute(this);
+        drawRoute(this);
+        updateGeofencing();
     }
 
     @Override
     public void onLocationChanged(Location location) {
         userLocation = location;
+
+        if(loadingFirstTime){
+            MapUtil.moveCamera(map,MapUtil.getLatLngFromLocation(userLocation));
+            loadingFirstTime = false;
+        }
     }
 
     @Override
