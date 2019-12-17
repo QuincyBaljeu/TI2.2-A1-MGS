@@ -26,6 +26,7 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_preference);
 
+        Log.d("@d", "yeeet");
         settingsAdapter = new SettingsAdapter(this.getActivity().getBaseContext());
         sharedPreferenceManager = new SharedPreferenceManager(this.getActivity().getBaseContext());
 
