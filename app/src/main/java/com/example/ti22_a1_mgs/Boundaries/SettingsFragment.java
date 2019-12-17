@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.example.ti22_a1_mgs.Controllers.SettingsAdapter;
 import com.example.ti22_a1_mgs.R;
-import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
+import com.example.ti22_a1_mgs.utils.SharedPreferenceManager;
 
 import java.io.Console;
 

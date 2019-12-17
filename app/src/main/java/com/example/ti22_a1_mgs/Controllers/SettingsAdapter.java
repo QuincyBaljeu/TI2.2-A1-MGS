@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 import com.example.ti22_a1_mgs.Entities.Settings;
-import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
+import com.example.ti22_a1_mgs.utils.SharedPreferenceManager;
 
 import java.util.Locale;
 

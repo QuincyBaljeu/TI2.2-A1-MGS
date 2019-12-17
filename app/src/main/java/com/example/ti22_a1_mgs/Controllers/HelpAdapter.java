@@ -3,7 +3,7 @@ package com.example.ti22_a1_mgs.Controllers;
 import android.content.Context;
 
 import com.example.ti22_a1_mgs.Entities.HelpData;
-import com.example.ti22_a1_mgs.util.SharedPreferenceManager;
+import com.example.ti22_a1_mgs.utils.SharedPreferenceManager;
 
 import java.util.Locale;
 

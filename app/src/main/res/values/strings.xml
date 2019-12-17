@@ -23,13 +23,13 @@
     <string name="navigation_name_help">Help</string>
     <string name="navigation_name_settings">Settings</string>
     <string name="help_title">Help</string>
-    <string name="settings_language">Language</string>
-    <string name="settings_colorblind">Colorblind mode</string>
-    <string name="name_main_activity">Home</string>
-    <string name="name_help_activity">Help</string>
-    <string name="name_map_activity">Map</string>
-    <string name="name_poi_activity">POI</string>
-    <string name="name_settings_activity">Settings</string>
+    <string name="settings_language" translatable="false">Language</string>
+    <string name="settings_colorblind" translatable="false">Colorblind mode</string>
+    <string name="name_main_activity" translatable="false">Home</string>
+    <string name="name_help_activity" translatable="false">Help</string>
+    <string name="name_map_activity" translatable="false">Map</string>
+    <string name="name_poi_activity" translatable="false">POI</string>
+    <string name="name_settings_activity" translatable="false">Settings</string>
     <string name="settings_language_id">Language</string>
 
     <string-array name="settings_availableLanguages">
@@ -43,7 +43,8 @@
     <string name="settings_satellite_id">Satellite</string>
     <string name="settings_satellite_title">Satellite view</string>
 
-    <string name="title_activity_maps">Map</string>
-    <string name="geofence_transition_invalid_type">Geofencing of wrong type</string>
-    <string name="waypoint_visited">You found a waypoint!</string>
+    <string name="title_activity_maps" translatable="false">Map</string>
+    <string name="geofence_transition_invalid_type" translatable="false">Geofencing of wrong type</string>
+    <string name="waypoint_visited" translatable="false">You found a waypoint!</string>
+    <string name="settings_colorblind_title">ColorBlind Mode</string>
 </resources>
