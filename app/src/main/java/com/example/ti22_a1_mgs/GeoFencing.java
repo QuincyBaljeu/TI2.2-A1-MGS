@@ -9,6 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ti22_a1_mgs.Database.Reposetory;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.utils.PopupUtil;
 import com.google.android.gms.location.Geofence;
@@ -34,8 +35,10 @@ public class GeoFencing extends BroadcastReceiver {
     private static final String TAG = "GEOFENCING";
 
     private Activity activity;
+    private Reposetory reposetory;
 
     public GeoFencing(Activity activity) {
+        this.reposetory = new Reposetory(activity.getApplication());
         this.activity = activity;
         geofencingClient = LocationServices.getGeofencingClient(activity);
         geofenceList = new ArrayList<>();
@@ -45,7 +48,9 @@ public class GeoFencing extends BroadcastReceiver {
     public void setGeofencingList(List<Waypoint> waypoints){
 
         for (Waypoint waypoint: waypoints){
-            addGeofence(waypoint.getLat(), waypoint.getLon(), "" + waypoint.getNumber());
+            if (!waypoint.isVisited()) {
+                addGeofence(waypoint.getLat(), waypoint.getLon(), "" + waypoint.getNumber());
+            }
         }
         GeofencingRequest request = getGeofencingRequest();
         geofencingClient.addGeofences(request, getGeoFencePendingIntent())
@@ -54,6 +59,7 @@ public class GeoFencing extends BroadcastReceiver {
                     public void onSuccess(Void aVoid) {
                         // Geofences added
                         // ...
+                        Log.e(TAG, "geofencing added succesfully");
                     }
                 })
                 .addOnFailureListener(activity, new OnFailureListener() {
@@ -61,6 +67,7 @@ public class GeoFencing extends BroadcastReceiver {
                     public void onFailure(@NonNull Exception e) {
                         // Failed to add geofences
                         // ...
+                        Log.e(TAG, "geofencing added failed");
                     }
                 });
     }
@@ -88,14 +95,17 @@ public class GeoFencing extends BroadcastReceiver {
             List<String> keysToRemove = new ArrayList<String>();
             for (Geofence geofence : triggeringGeofences) {
                 String key = geofence.getRequestId();
+
+                Waypoint currentWaypoint = reposetory.getWaypoint(key);
+                currentWaypoint.setVisited(true);
+                reposetory.update(currentWaypoint);
+
                 keysToRemove.add(key);
 
                 PopupUtil.showAlertDialog(activity, activity.getResources().getString(R.string.waypoint_visited), "Duh", null);
 
             }
             geofencingClient.removeGeofences(keysToRemove);
-            //Todo: Set waypoint to visited in database
-            //Todo: update route
 
             // Get the transition details as a String.
             String geofenceTransitionDetails = getGeofenceTransitionDetails(

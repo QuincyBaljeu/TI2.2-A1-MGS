@@ -93,9 +93,6 @@ public class MapsActivity extends AppCompatActivity
 
     private RouteViewModel viewModelThing;
 
-
-    private RouteViewModel viewModelThing;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +103,6 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        GeoFencing geoFencing = new GeoFencing(this);
 
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
@@ -179,6 +174,7 @@ public class MapsActivity extends AppCompatActivity
             MapUtil.setMapSettings(map);
 //            MapUtil.initializeMapCamera(map);
             drawRoute(this);
+            updateGeofencing();
 
             map.setOnInfoWindowClickListener(this);
         } else {
@@ -221,6 +217,17 @@ public class MapsActivity extends AppCompatActivity
                 RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
                 */
 
+            }
+        });
+    }
+
+    private void updateGeofencing(){
+
+        final GeoFencing geoFencing = new GeoFencing(this);
+        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+            @Override
+            public void onChanged(List<Waypoint> waypoints) {
+                geoFencing.setGeofencingList(waypoints);
             }
         });
     }
