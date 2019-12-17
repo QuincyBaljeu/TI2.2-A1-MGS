@@ -14,17 +14,11 @@ public class MapUtil {
 
     private static final String TAG = MapUtil.class.getSimpleName();
 
-    private static final LatLngBounds LAT_LNG_BOUNDS =
-            new LatLngBounds(
-                    new LatLng(51.645891, 5.038042),
-                    new LatLng(51.654991, 5.060769)
-            );
-
     private static final float DEFAULT_CAMERA_ZOOM = 15.0f;
 
     public static void setMapStyling(Activity activity, GoogleMap googleMap) {
         //standard
-        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 //        //custom
 //        try {
@@ -38,11 +32,6 @@ public class MapUtil {
 //        } catch (Resources.NotFoundException e) {
 //            Log.e(TAG, "Can't find style. Error: ", e);
 //        }
-    }
-
-    public static void initializeMapCamera(GoogleMap googleMap) {
-//        googleMap.setMinZoomPreference(DEFAULT_CAMERA_ZOOM);
-//        googleMap.setLatLngBoundsForCameraTarget(LAT_LNG_BOUNDS);
     }
 
     public static void clearMap(GoogleMap googleMap) {

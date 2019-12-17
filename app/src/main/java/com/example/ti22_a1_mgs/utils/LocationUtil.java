@@ -17,7 +17,7 @@ public class LocationUtil {
     private static final int LOCATION_REQUEST_INTERVAL = 2500;
     private static final int LOCATION_REQUEST_FASTEST_INTERVAL = 1000;
 
-    public static synchronized boolean checkLocationPermission(Activity activity) {
+    public static boolean checkLocationPermission(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
