@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.example.ti22_a1_mgs.Boundaries.MapsActivity;
 import com.example.ti22_a1_mgs.Database.Reposetory;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class GeoFencing extends BroadcastReceiver {
 
@@ -37,10 +40,12 @@ public class GeoFencing extends BroadcastReceiver {
 
     private Activity activity;
     private Reposetory reposetory;
+    private LifecycleOwner lifecycleOwner;
 
-    public GeoFencing(Activity activity) {
+    public GeoFencing(Activity activity, LifecycleOwner lifecycleOwner) {
         this.reposetory = new Reposetory(activity.getApplication());
         this.activity = activity;
+        this.lifecycleOwner = lifecycleOwner;
         geofencingClient = LocationServices.getGeofencingClient(activity);
         geofenceList = new ArrayList<>();
 
@@ -93,17 +98,30 @@ public class GeoFencing extends BroadcastReceiver {
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-            List<String> keysToRemove = new ArrayList<String>();
+            final List<String> keysToRemove = new ArrayList<String>();
             for (Geofence geofence : triggeringGeofences) {
-                String key = geofence.getRequestId();
+                final String key = geofence.getRequestId();
 
-//                Waypoint currentWaypoint = reposetory.getWaypoint(Integer.parseInt(key));
-//                currentWaypoint.setVisited(true);
-//                reposetory.update(currentWaypoint);
+                try {
+                    reposetory.getWaypoint((Integer.parseInt(key))).observe(this.lifecycleOwner, new Observer<List<Waypoint>>() {
+                        @Override
+                        public void onChanged(List<Waypoint> waypoints) {
 
-                keysToRemove.add(key);
+                            Waypoint currentWaypoint = waypoints.get(0);
+                            currentWaypoint.setVisited(true);
+                            reposetory.update(currentWaypoint);
 
-                PopupUtil.showAlertDialog(activity, activity.getResources().getString(R.string.waypoint_visited), "Duh", null);
+                            keysToRemove.add(key);
+
+                            PopupUtil.showAlertDialog(activity, activity.getResources().getString(R.string.waypoint_visited), "Duh", null);
+                        }
+                    });
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
 
             }
             geofencingClient.removeGeofences(keysToRemove);

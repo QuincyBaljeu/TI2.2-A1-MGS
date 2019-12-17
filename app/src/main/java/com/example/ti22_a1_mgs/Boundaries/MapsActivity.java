@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
+import com.example.ti22_a1_mgs.GeoFencing;
 import com.example.ti22_a1_mgs.R;
 import com.example.ti22_a1_mgs.utils.CustomRoutingListener;
 import com.example.ti22_a1_mgs.utils.LocationUtil;
@@ -139,23 +143,27 @@ public class MapsActivity extends AppCompatActivity
 
                 //create lists for data tracking
                 ArrayList<LatLng> locations = new ArrayList<>();
-                ArrayList<Waypoint> cloneWaypoint = new ArrayList<>(waypoints);
+                ArrayList<Waypoint> nonVistedClonedWaypoints = new ArrayList<>();
+
+                //clone all non visited waypoints
+                for (Waypoint waypoint : waypoints) {
+                    if (!waypoint.isVisited()) {
+                        nonVistedClonedWaypoints.add(waypoint);
+                    }
+                }
 
                 //get first waypoint
-                Waypoint firstWaypoint = cloneWaypoint.get(0);
+                Waypoint firstWaypoint = nonVistedClonedWaypoints.get(0);
 
                 //create the rest of the polylines
-                while (cloneWaypoint.size() != 0) {
+                while (nonVistedClonedWaypoints.size() != 0) {
 
-                    LatLng newPos = new LatLng(cloneWaypoint.get(0).getLat(), cloneWaypoint.get(0).getLon());
+                    LatLng newPos = new LatLng(nonVistedClonedWaypoints.get(0).getLat(), nonVistedClonedWaypoints.get(0).getLon());
                     //checks if waypoint has been visited if not it adds to the draw list
-                    if (!cloneWaypoint.get(0).isVisited()) {
-                        locations.add(newPos);
+                    locations.add(newPos);
 
-                        //draw marker on map
-                        MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
-                    }
-
+                    //draw marker on map
+                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVistedClonedWaypoints.size(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
 
                     //if it hits the max possible requests
                     if (locations.size() == 25) {
@@ -163,13 +171,30 @@ public class MapsActivity extends AppCompatActivity
                         locations.clear();
                     }
 
-                    cloneWaypoint.remove(cloneWaypoint.get(0));
+                    nonVistedClonedWaypoints.remove(nonVistedClonedWaypoints.get(0));
                 }
 
                 //create current polyline
-                if (userLocation != null && firstWaypoint != null)
+                if (userLocation != null && firstWaypoint != null && !firstWaypoint.isVisited())
                     RouteUtil.routingWaypointRequest(getApplicationContext(), MapUtil.getLatLngFromLocation(userLocation), new LatLng(firstWaypoint.getLat(), firstWaypoint.getLon()), listener);
 
+            }
+        });
+    }
+
+    private void updateGeofencing(){
+
+        final Activity activity = this;
+        final LifecycleOwner lifecycleOwner = this;
+
+        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+            @Override
+            public void onChanged(List<Waypoint> waypoints) {
+                if (waypoints.isEmpty()){
+                    return;
+                }
+                final GeoFencing geoFencing = new GeoFencing(activity, lifecycleOwner);
+                geoFencing.setGeofencingList(waypoints);
             }
         });
     }
@@ -197,7 +222,9 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMapLoaded() {
-        drawRoute(this);
+       drawRoute(this);
+       updateGeofencing();
+//        drawTestRoute(this);
     }
 
     @Override
