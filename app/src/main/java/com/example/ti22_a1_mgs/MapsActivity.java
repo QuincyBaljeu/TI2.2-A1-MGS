@@ -92,6 +92,33 @@ public class MapsActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
         this.viewModelThing = ViewModelProviders.of(this).get(RouteViewModel.class);
+
+//        this.viewModelThing.deleteAllDatabaseContents();
+
+
+//        this.viewModelThing.fillDatabaseFromData(
+//                this.viewModelThing.getBlindWallsBreda().getAllWalls(), this
+//        );
+
+//        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+//            @Override
+//            public void onChanged(List<Waypoint> waypoints) {
+//                //stuff that needs to happen when list is edited
+//                for (Waypoint waypoint : waypoints) {
+//                    Log.wtf(TAG, waypoint.toString());
+//                }
+//            }
+//        });
+//
+//        this.viewModelThing.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
+//            @Override
+//            public void onChanged(List<PointOfInterest> pointOfInterests) {
+//                //stuff that needs to happen when list is edited
+//                for (PointOfInterest pointOfInterest : pointOfInterests) {
+//                    Log.wtf(TAG, pointOfInterest.toString());
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -130,6 +157,45 @@ public class MapsActivity extends AppCompatActivity
         map.setOnMapLoadedCallback(this);
     }
 
+    private void drawRoute(final CustomRoutingListener listener) {
+        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+            @Override
+            public void onChanged(List<Waypoint> waypoints) {
+                ArrayList<LatLng> locations = new ArrayList<>();
+
+                ArrayList<Waypoint> cloneWaypoint = new ArrayList<>(waypoints);
+                while (cloneWaypoint.size() != 0) {
+                    LatLng newPos = new LatLng(cloneWaypoint.get(0).getLat(), cloneWaypoint.get(0).getLon());
+                    locations.add(newPos);
+                    MarkerUtil.addDefaultMarker(map, newPos, "Waypoint " + cloneWaypoint.size(), UUID.randomUUID().toString().substring(0,10));
+                    if (locations.size() == 25) {
+                        RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                        locations.clear();
+                    }
+                    cloneWaypoint.remove(cloneWaypoint.get(0));
+                }
+                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+/*
+                for (int i = 0; i < 25; i++) {
+                    locations.add(new LatLng(waypoints.get(i).getLat(), waypoints.get(i).getLon()));
+                    MarkerUtil.addDefaultMarker(map, locations.get(i), "Waypoint " + i, UUID.randomUUID().toString().substring(0,10));
+
+                }
+                Log.wtf(TAG, "Drawing the route");
+                if (waypoints.isEmpty()) {
+                    Log.wtf(TAG, locations.toString());
+                    return;
+                }
+                Log.wtf(TAG, locations.toString());
+
+                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                */
+
+            }
+        });
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
         locationRequest = LocationUtil.getNewLocationRequest();
@@ -153,6 +219,8 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMapLoaded() {
+//        drawRoute(this);
+
         List<LatLng> latLngList = new ArrayList<>();
         latLngList.add(MapUtil.getLatLngFromLocation(currentLocation));
         latLngList.add(new LatLng(51.571915, 4.768323));

@@ -29,7 +29,7 @@ public class RouteUtil {
                 .multiple(false)
                 .key(key)
                 .build();
-        routing.execute();
+        if(routing != null) routing.execute();
     }
 
     public static synchronized void routingWaypointsRequest(Context context, List<LatLng> waypointList, CustomRoutingListener routingListener) {
@@ -42,6 +42,7 @@ public class RouteUtil {
                 .multiple(true)
                 .key(key)
                 .build();
-        routing.execute();
+
+        if(routing != null) routing.execute();
     }
 }

@@ -1,5 +1,7 @@
 package com.example.ti22_a1_mgs.utils;
 
+import android.util.Log;
+
 import com.directions.route.RoutingListener;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
@@ -167,9 +169,13 @@ public class CustomRouting extends CustomAbstractRouting {
 
         public com.example.ti22_a1_mgs.utils.CustomRouting build() {
             if (this.waypoints.size() < 2) {
-                throw new IllegalArgumentException("Must supply at least two waypoints to route between.");
+                Log.wtf("BUILDING ERROR","Must supply at least two waypoints to route between.");
+//                throw new IllegalArgumentException("Must supply at least two waypoints to route between.");
+                return null;
             } else if (this.waypoints.size() <= 2 && this.optimize) {
-                throw new IllegalArgumentException("You need at least three waypoints to enable optimize");
+                Log.wtf("BUILDING ERROR","You need at least three waypoints to enable optimize");
+                return null;
+//                throw new IllegalArgumentException("You need at least three waypoints to enable optimize");
             } else {
                 return new com.example.ti22_a1_mgs.utils.CustomRouting(this);
             }

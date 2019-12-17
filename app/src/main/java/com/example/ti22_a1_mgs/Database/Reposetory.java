@@ -2,6 +2,7 @@ package com.example.ti22_a1_mgs.Database;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -10,6 +11,7 @@ import com.example.ti22_a1_mgs.Database.entities.PointOfInterestDao;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.Database.entities.WaypointDao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -38,7 +40,7 @@ public class Reposetory {
         return allPointsOfInterest;
     }
 
-    public void inset(PointOfInterest pointOfInterest) {
+    public void insert(PointOfInterest pointOfInterest) {
         new InsertPointOfInterestAsyncTask(this.pointOfInterestDao).execute(pointOfInterest);
     }
 
@@ -54,11 +56,13 @@ public class Reposetory {
         new DeleteAllPointsOfInterestAsyncTask(this.pointOfInterestDao).execute();
     }
 
-    public LiveData<List<PointOfInterest>> getPointOfInterestByLocation(String location) throws ExecutionException, InterruptedException {
-        return new GetPointOfInterestByLocationName(this.pointOfInterestDao).execute(location).get();
+    public LiveData<List<PointOfInterest>> getPointOfInterestByLocation(int id) throws ExecutionException, InterruptedException {
+        return new GetPointOfInterestById(this.pointOfInterestDao).execute(id).get();
     }
 
     private static class InsertPointOfInterestAsyncTask extends AsyncTask<PointOfInterest, Void, Void> {
+
+        private static final String TAG = "InsertPointOfInterestAs";
 
         private PointOfInterestDao pointOfInterestDao;
 
@@ -68,6 +72,7 @@ public class Reposetory {
 
         @Override
         protected Void doInBackground(PointOfInterest... notes) {
+//            Log.wtf(TAG, "inserting note: " + notes[0]);
             this.pointOfInterestDao.insert(notes[0]);
             return null;
         }
@@ -118,36 +123,36 @@ public class Reposetory {
         }
     }
 
-    private static class GetPointOfInterestByLocationName extends AsyncTask<String, Void, LiveData<List<PointOfInterest>>>{
+    private static class GetPointOfInterestById extends AsyncTask<Integer, Void, LiveData<List<PointOfInterest>>>{
         private PointOfInterestDao pointOfInterestDao;
 
-        public GetPointOfInterestByLocationName(PointOfInterestDao pointOfInterestDao) {
+        public GetPointOfInterestById(PointOfInterestDao pointOfInterestDao) {
             this.pointOfInterestDao = pointOfInterestDao;
         }
 
         @Override
-        protected LiveData<List<PointOfInterest>> doInBackground(String... strings) {
-            return pointOfInterestDao.findPointOfInterestByName(strings[0]);
+        protected LiveData<List<PointOfInterest>> doInBackground(Integer... integers) {
+            return pointOfInterestDao.findPointOfInterestByName(integers[0]);
         }
     }
 
 
 
 //----------------------------------Waypionts----------------------------------\\
-    public void inset(Waypoint waypoint) {
+    public void insert(Waypoint waypoint) {
         new InsertWaypointAsyncTask(this.waypointDao).execute(waypoint);
     }
 
     public void update(Waypoint waypoint) {
-        new UpdateWaypointAsyncTask(this.waypointDao).doInBackground(waypoint);
+        new UpdateWaypointAsyncTask(this.waypointDao).execute(waypoint);
     }
 
     public void delete(Waypoint waypoint) {
-        new DeleteWaypointAsyncTask(this.waypointDao).doInBackground(waypoint);
+        new DeleteWaypointAsyncTask(this.waypointDao).execute(waypoint);
     }
 
     public void deleteAllWaypoints() {
-        new DeleteWaypointAsyncTask(this.waypointDao).doInBackground();
+        new DeleteAllWaypointsAsyncTask(this.waypointDao).execute();
     }
 
     private static class InsertWaypointAsyncTask extends AsyncTask<Waypoint, Void, Void> {
@@ -158,8 +163,11 @@ public class Reposetory {
             this.waypointDao = noteDao;
         }
 
+        private static final String TAG = "InsertWaypointAsyncTask";
+
         @Override
         protected Void doInBackground(Waypoint... notes) {
+//            Log.wtf(TAG, "inserting note: " + notes[0]);
             this.waypointDao.insert(notes[0]);
             return null;
         }
@@ -210,4 +218,24 @@ public class Reposetory {
         }
     }
 
+
+    private static class BlindWallSubClass {
+        private PointOfInterestDao pointOfInterestDao;
+        private String adress;
+        private String descriptionNL;
+        private String descriptionEN;
+        private double latitude;
+        private double longitude;
+        private ArrayList<String> urls;
+
+        public BlindWallSubClass(PointOfInterestDao pointOfInterestDao, String adress, String descriptionNL, String descriptionEN, double latitude, double longitude, ArrayList<String> urls) {
+            this.pointOfInterestDao = pointOfInterestDao;
+            this.adress = adress;
+            this.descriptionNL = descriptionNL;
+            this.descriptionEN = descriptionEN;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.urls = urls;
+        }
+    }
 }
