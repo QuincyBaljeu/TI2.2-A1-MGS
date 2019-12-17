@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
+import com.example.ti22_a1_mgs.GeoFencing;
 import com.example.ti22_a1_mgs.R;
 import com.example.ti22_a1_mgs.utils.CustomRoutingListener;
 import com.example.ti22_a1_mgs.utils.LocationUtil;
@@ -200,6 +204,23 @@ public class MapsActivity extends AppCompatActivity
         });
     }
 
+    private void updateGeofencing(){
+
+        final Activity activity = this;
+        final LifecycleOwner lifecycleOwner = this;
+
+        this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
+            @Override
+            public void onChanged(List<Waypoint> waypoints) {
+                if (waypoints.isEmpty()){
+                    return;
+                }
+                final GeoFencing geoFencing = new GeoFencing(activity, lifecycleOwner);
+                geoFencing.setGeofencingList(waypoints);
+            }
+        });
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
         locationRequest = LocationUtil.getNewLocationRequest();
@@ -223,7 +244,9 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMapLoaded() {
-        drawRoute(this);
+       drawRoute(this);
+       updateGeofencing();
+//        drawTestRoute(this);
     }
 
     @Override
