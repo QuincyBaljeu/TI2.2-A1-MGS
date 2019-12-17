@@ -28,4 +28,7 @@ public interface WaypointDao {
     @Query("SELECT * FROM waypoint_table ORDER BY number DESC")
     LiveData<List<Waypoint>> getAllWaypoints();
 
+    @Query("SELECT * FROM waypoint_table WHERE number=:waypointNumber")
+    LiveData<List<Waypoint>> findPointOfInterestByName(final Integer waypointNumber);
+
 }
