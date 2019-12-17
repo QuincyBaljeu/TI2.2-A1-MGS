@@ -40,4 +40,6 @@
     <string name="settings_defaultLanguage">English</string>
 
     <string name="title_activity_maps">Map</string>
+    <string name="geofence_transition_invalid_type">Geofencing of wrong type</string>
+    <string name="waypoint_visited">You found a waypoint!</string>
 </resources>

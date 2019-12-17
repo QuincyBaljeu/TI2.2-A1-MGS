@@ -60,6 +60,8 @@ public class Reposetory {
         return new GetPointOfInterestById(this.pointOfInterestDao).execute(id).get();
     }
 
+
+
     private static class InsertPointOfInterestAsyncTask extends AsyncTask<PointOfInterest, Void, Void> {
 
         private static final String TAG = "InsertPointOfInterestAs";
@@ -139,6 +141,15 @@ public class Reposetory {
 
 
 //----------------------------------Waypionts----------------------------------\\
+
+    public Waypoint getWaypoint(String number) {
+        // @number is the primary key in int
+        //TODO: LUCAS VOEG DIT TOE AUB!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        return null;
+    }
+
+
+
     public void insert(Waypoint waypoint) {
         new InsertWaypointAsyncTask(this.waypointDao).execute(waypoint);
     }
