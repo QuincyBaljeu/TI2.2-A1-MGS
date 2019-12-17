@@ -13,12 +13,14 @@ public class PointOfInterest {
 
     @PrimaryKey @NonNull
     private int id;
+    private String address;
     private String nlDescription;
     private String enDescription;
     private ArrayList<String> imgUrls;
 
-    public PointOfInterest(int id, String nlDescription, String enDescription, ArrayList<String> imgUrls) {
+    public PointOfInterest(int id, String address, String nlDescription,  String enDescription, ArrayList<String> imgUrls) {
         this.id = id;
+        this.address = address;
         this.nlDescription = nlDescription;
         this.enDescription = enDescription;
         this.imgUrls = imgUrls;
@@ -42,6 +44,10 @@ public class PointOfInterest {
 
     public ArrayList<String> getImgUrls() {
         return imgUrls;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     @Override
