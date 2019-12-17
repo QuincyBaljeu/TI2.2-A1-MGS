@@ -142,12 +142,22 @@ public class Reposetory {
 
 //----------------------------------Waypionts----------------------------------\\
 
-    public Waypoint getWaypoint(String number) {
-        // @number is the primary key in int
-        //TODO: LUCAS VOEG DIT TOE AUB!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        return null;
+    public LiveData<List<Waypoint>> getWaypoint(int number) throws ExecutionException, InterruptedException {
+        return new GetWayPointById(this.waypointDao).execute(number).get();
     }
 
+    private static class GetWayPointById extends AsyncTask<Integer, Void, LiveData<List<Waypoint>>>{
+        private WaypointDao pointOfInterestDao;
+
+        public GetWayPointById(WaypointDao pointOfInterestDao) {
+            this.pointOfInterestDao = pointOfInterestDao;
+        }
+
+        @Override
+        protected LiveData<List<Waypoint>> doInBackground(Integer... integers) {
+            return pointOfInterestDao.findPointOfInterestByName(integers[0]);
+        }
+    }
 
 
     public void insert(Waypoint waypoint) {
