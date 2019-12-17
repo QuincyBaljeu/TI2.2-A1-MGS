@@ -178,14 +178,12 @@ public class MapsActivity extends AppCompatActivity
                         RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
                         locations.clear();
                     }
-
                     nonVistedClonedWaypoints.remove(nonVistedClonedWaypoints.get(0));
                 }
 
                 //create current polyline
                 if (userLocation != null && firstWaypoint != null && !firstWaypoint.isVisited())
                     RouteUtil.routingWaypointRequest(getApplicationContext(), MapUtil.getLatLngFromLocation(userLocation), new LatLng(firstWaypoint.getLat(), firstWaypoint.getLon()), listener);
-
             }
         });
     }
