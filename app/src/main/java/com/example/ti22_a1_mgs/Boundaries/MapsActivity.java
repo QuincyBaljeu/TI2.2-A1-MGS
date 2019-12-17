@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
+import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.GeoFencing;
 import com.example.ti22_a1_mgs.R;
@@ -100,7 +101,7 @@ public class MapsActivity extends AppCompatActivity
 //        this.viewModelThing.deleteAllDatabaseContents();
 
 //        this.viewModelThing.fillDatabaseFromData(
-//                this.viewModelThing.getBlindWallsBreda().getAllWalls(), this
+//                new BlindWallsBreda().getAllWalls(), this
 //        );
     }
 
@@ -177,14 +178,12 @@ public class MapsActivity extends AppCompatActivity
                         RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
                         locations.clear();
                     }
-
                     nonVistedClonedWaypoints.remove(nonVistedClonedWaypoints.get(0));
                 }
 
                 //create current polyline
                 if (userLocation != null && firstWaypoint != null && !firstWaypoint.isVisited())
                     RouteUtil.routingWaypointRequest(getApplicationContext(), MapUtil.getLatLngFromLocation(userLocation), new LatLng(firstWaypoint.getLat(), firstWaypoint.getLon()), listener);
-
             }
         });
     }

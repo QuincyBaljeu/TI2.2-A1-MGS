@@ -2,18 +2,17 @@ package com.example.ti22_a1_mgs.Boundaries;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.ti22_a1_mgs.Controllers.RouteAdapter;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.R;
@@ -27,11 +26,18 @@ public class RouteActivity extends AppCompatActivity {
     private LiveData<List<PointOfInterest>> allPointsOfInterest;
     private RecyclerView recyclerView;
     private RouteViewModel model;
+    private RecyclerView.Adapter routeAdapter;
+    private List<PointOfInterest> dataSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
+
+        Toolbar toolbar = findViewById(R.id.custom_action_bar);
+        setSupportActionBar(toolbar);
+
+        this.dataSet = new ArrayList<>();
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -51,29 +57,22 @@ public class RouteActivity extends AppCompatActivity {
 
         model = ViewModelProviders.of(this).get(RouteViewModel.class);
         allPointsOfInterest = model.getAllPointsOfInterest();
+        allPointsOfInterest.observe(this, new Observer<List<PointOfInterest>>() {
+            @Override
+            public void onChanged(List<PointOfInterest> pointOfInterests) {
+                dataSet.addAll(pointOfInterests);
+                routeAdapter.notifyDataSetChanged();
+            }
+        });
 
         recyclerView = findViewById(R.id.location_recyclerview);
-        recyclerView.setHasFixedSize(true);
-
-        recyclerView.setLayoutManager(new GridLayoutManager(
-                this, 1, GridLayoutManager.VERTICAL, false)
-        );
-        recyclerView.setAdapter(this.model.getPoiAdapter());
-
-        this.model.getAllPointsOfInterest().observe(this, new androidx.lifecycle.Observer<List<PointOfInterest>>() {
-            @Override
-            public void onChanged(List<PointOfInterest> point) {
-                model.getPoiAdapter().setPointOfInterests(point);
-            }
-        });
+        routeAdapter = new RouteAdapter(dataSet,this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(routeAdapter);
 
 
-        this.model.getAllPointsOfInterest().observe(this, new Observer<List<PointOfInterest>>() {
-            @Override
-            public void onChanged(List<PointOfInterest> point) {
-                model.reloadList(point);
-            }
-        });
+
+
 
     }
 }
