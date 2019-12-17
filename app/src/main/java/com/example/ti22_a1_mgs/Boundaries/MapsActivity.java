@@ -171,7 +171,7 @@ public class MapsActivity extends AppCompatActivity
                 ArrayList<LatLng> locations = new ArrayList<>();
                 ArrayList<Waypoint> nonVistedClonedWaypoints = new ArrayList<>();
 
-                //add all non visited waypoints
+                //clone all non visited waypoints
                 for (Waypoint waypoint : waypoints) {
                     if (!waypoint.isVisited()) {
                         nonVistedClonedWaypoints.add(waypoint);
