@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
@@ -14,7 +15,8 @@ import com.example.ti22_a1_mgs.Database.entities.PointOfInterestDao;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.Database.entities.WaypointDao;
 
-@Database(entities = {Waypoint.class, PointOfInterest.class}, version = 1, exportSchema = false)
+@Database(entities = {Waypoint.class, PointOfInterest.class}, version = 3, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class RouteDatabase extends RoomDatabase {
 
     private static RouteDatabase instance;

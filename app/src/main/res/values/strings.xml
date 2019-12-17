@@ -39,4 +39,5 @@
     </string-array>
     <string name="settings_defaultLanguage">English</string>
 
+    <string name="title_activity_maps">Map</string>
 </resources>

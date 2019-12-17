@@ -1,4 +1,4 @@
-package com.example.ti22_a1_mgs.util;
+package com.example.ti22_a1_mgs.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

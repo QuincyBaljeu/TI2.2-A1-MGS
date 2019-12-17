@@ -28,6 +28,9 @@ public abstract class ExampleDatabaseUsingAcivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Waypoint> waypoints) {
                 //stuff that needs to happen when list is edited
+                for (Waypoint waypoint : waypoints) {
+//                    Log.wtf(TAG, viewModelThing.getPointOfInterestByLocationName(waypoint.getPointOfInterestId()).get(0).toString());
+                }
             }
         });
 
@@ -39,10 +42,8 @@ public abstract class ExampleDatabaseUsingAcivity extends AppCompatActivity {
         });
 
         //
-        this.viewModelThing.insert(new PointOfInterest("VVV", "het startpunt", "The start"));
+        this.viewModelThing.insert(new PointOfInterest(1, "het startpunt", "The start", null));
         this.viewModelThing.insert(new Waypoint(1, 3.24, 214.42, 1));
-
-
 
     }
 }

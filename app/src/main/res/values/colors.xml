@@ -2,7 +2,10 @@
 <resources>
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#0000FF</color>
+    <color name="routeCurrentColor">#03A9F4</color>
+    <color name="routeColor">#7503A9F4</color>
+    <color name="markerColor">#8BC34A</color>
     <color name="icons">#0000FF</color>
     <color name="black">#000000</color>
+    <color name="colorAccent">#0000FF</color>
 </resources>

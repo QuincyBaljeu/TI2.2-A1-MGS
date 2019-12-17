@@ -3,26 +3,38 @@ package com.example.ti22_a1_mgs.Database.entities;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "waypoint_table")
+import java.util.ArrayList;
+
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "waypoint_table", foreignKeys = {
+        @ForeignKey(entity = PointOfInterest.class,
+                parentColumns = "id",
+                childColumns = "pointOfInterestId",
+        onDelete = CASCADE)
+}, indices = {@Index("pointOfInterestId")})
 public class Waypoint {
 
-    @PrimaryKey
+    @PrimaryKey @Nullable
     private int number;
 
     private double lat;
     private double lon;
     private boolean visited;
-    @ForeignKey(entity = PointOfInterest.class, parentColumns = "pointOfInterestId", childColumns = "pointOfInterestId")
-    private int pointOfInterestId;
+    private Integer pointOfInterestId;
 
 
-    public Waypoint(int number, double lat, double lon, int pointOfInterestId) {
+    public Waypoint(int number, double lat, double lon, @Nullable Integer pointOfInterestId) {
         this.number = number;
         this.lat = lat;
         this.lon = lon;
-        this.pointOfInterestId = pointOfInterestId;
+        if (pointOfInterestId != null) {
+            this.pointOfInterestId = pointOfInterestId;
+        }
     }
 
     @Override
@@ -56,7 +68,7 @@ public class Waypoint {
         return visited;
     }
 
-    public int getPointOfInterestId() {
+    public Integer getPointOfInterestId() {
         return pointOfInterestId;
     }
 
@@ -72,7 +84,7 @@ public class Waypoint {
         this.visited = visited;
     }
 
-    public void setPointOfInterestId(int pointOfInterestId) {
+    public void setPointOfInterestId(Integer pointOfInterestId) {
         this.pointOfInterestId = pointOfInterestId;
     }
 }
