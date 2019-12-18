@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         final RouteViewModel viewModel = ViewModelProviders.of(this).get(RouteViewModel.class);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_id), Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPref.edit();
-        if (sharedPref.getBoolean(getString(R.string.preferences_database_loaded), false)) {
+        if (sharedPref.getBoolean(getString(R.string.preferences_database_loaded), true)) {
             viewModel.deleteAllDatabaseContents();
             final LifecycleOwner owner = this;
             final Handler handler = new Handler();

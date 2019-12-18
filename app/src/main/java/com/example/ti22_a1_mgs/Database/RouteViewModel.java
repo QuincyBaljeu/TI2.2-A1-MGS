@@ -48,17 +48,24 @@ public class RouteViewModel extends AndroidViewModel {
         this.repository.deleteAllWaypoints();
     }
 
-    public void fillDatabaseFromData(final List<BlindWall> blindWalls, LifecycleOwner observer) {
+    public void fillDatabaseFromData(final List<BlindWall> blindWalls, final LifecycleOwner observer) {
+        Log.wtf(TAG, "Filling database");
         for (final BlindWall wall : blindWalls) {
+//            Log.wtf(TAG, "Inserting wall: " + wall.toString());
             repository.insert(new PointOfInterest(
                     wall.getWallId(),
                     wall.getDescriptionDutch(),
                     wall.getDescriptionEnglish(),
                     (ArrayList<String>) wall.getImagesUrls()));
 
-            getPointOfInterestByLocationName(wall.getWallId()).observe(observer, new Observer<List<PointOfInterest>>() {
+            final LiveData<List<PointOfInterest>> listLiveData = getPointOfInterestByLocationName(wall.getWallId());
+            listLiveData.observe(observer, new Observer<List<PointOfInterest>>() {
                 @Override
                 public void onChanged(List<PointOfInterest> pointOfInterests) {
+                    if (pointOfInterests.isEmpty()) {
+                        return;
+                    }
+
                     for (PointOfInterest pointOfInterest : pointOfInterests) {
                         if (pointOfInterest.getId() == wall.getWallId()) {
                             repository.insert(new Waypoint(
@@ -68,9 +75,10 @@ public class RouteViewModel extends AndroidViewModel {
                                     pointOfInterest.getId()));
                         }
                     }
+                    listLiveData.removeObservers(observer);
+
                 }
             });
-
         }
     }
 

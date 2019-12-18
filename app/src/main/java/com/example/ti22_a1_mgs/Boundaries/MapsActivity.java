@@ -155,10 +155,14 @@ public class MapsActivity extends AppCompatActivity
 
                 //clone all non visited waypoints
                 for (Waypoint waypoint : waypoints) {
+//                    Log.wtf(TAG, waypoint.toString());
                     if (!waypoint.isVisited()) {
                         nonVistedClonedWaypoints.add(waypoint);
                     }
                 }
+
+                if (nonVistedClonedWaypoints.isEmpty())
+                    return;
 
                 //get first waypoint
                 Waypoint firstWaypoint = nonVistedClonedWaypoints.get(0);
