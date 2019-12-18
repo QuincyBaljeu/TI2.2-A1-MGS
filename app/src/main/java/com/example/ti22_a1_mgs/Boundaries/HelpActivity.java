@@ -49,6 +49,8 @@ public class HelpActivity extends AppCompatActivity {
 
         });
 
+
+        helpText.setTextColor(helpAdapter.getColor());
         helpText.setText(helpAdapter.requestHelpText());
 
 //        if(Locale.getDefault().getLanguage().equals("nl")){
