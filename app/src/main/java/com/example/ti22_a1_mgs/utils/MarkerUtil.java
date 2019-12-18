@@ -57,11 +57,17 @@ public class MarkerUtil {
         googleMap.addMarker(tempMarker);
     }
 
-    public static Bitmap createCustomMarkerBitmap(Context context, @DrawableRes int resource) {
+    public static Bitmap createCustomMarkerBitmap(Context context, Drawable resource) {
         View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
 
         CircleImageView markerImage = marker.findViewById(R.id.circle_image_view);
-        markerImage.setImageResource(resource);
+
+        if(resource == null){
+            markerImage.setImageResource(R.drawable.blindwalls_icon);
+        } else {
+            markerImage.setImageDrawable(resource);
+        }
+
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

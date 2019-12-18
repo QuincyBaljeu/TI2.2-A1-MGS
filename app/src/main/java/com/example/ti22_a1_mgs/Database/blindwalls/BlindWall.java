@@ -76,7 +76,7 @@ public class BlindWall implements Parcelable {
                 String imageUrl = imagesUrl.getJSONObject(j).getString("url");
                 imagesUrls.add(imageUrl);
             }
-            imagesUrls = imagesUrls;
+            this.imagesUrls = imagesUrls;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -215,7 +215,9 @@ public class BlindWall implements Parcelable {
     public String toString() {
         return "BlindWall{" +
                 "wallId=" + wallId +
-                ", title='" + title + '\'' +
+                ", title='" + title +
+                ", imgurls:" + imagesUrls.size() +
+                '\'' +
                 '}';
     }
 

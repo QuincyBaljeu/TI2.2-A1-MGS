@@ -25,7 +25,7 @@ public interface WaypointDao {
     @Query("DELETE FROM waypoint_table")
     void deleteAllWaypoints();
 
-    @Query("SELECT * FROM waypoint_table ORDER BY number DESC")
+    @Query("SELECT * FROM waypoint_table ORDER BY number ASC")
     LiveData<List<Waypoint>> getAllWaypoints();
 
     @Query("SELECT * FROM waypoint_table WHERE number=:waypointNumber")

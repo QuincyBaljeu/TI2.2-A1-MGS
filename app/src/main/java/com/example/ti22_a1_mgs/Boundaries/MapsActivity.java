@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
+import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.GeoFencing;
 import com.example.ti22_a1_mgs.R;
@@ -42,7 +44,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,9 +59,12 @@ public class MapsActivity extends AppCompatActivity
         DialogInterface.OnClickListener,
         CustomRoutingListener,
         GoogleMap.OnInfoWindowClickListener,
-        GoogleMap.OnMapLoadedCallback {
+        GoogleMap.OnMapLoadedCallback,
+        Observer<List<PointOfInterest>> {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
+
+    private static int MAX_MARKER_VISIBLE = 3;
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -66,6 +74,7 @@ public class MapsActivity extends AppCompatActivity
     private RouteViewModel viewModelThing;
 
     private boolean loadingFirstTime = true;
+    private List<PointOfInterest> pointOfInterests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +129,8 @@ public class MapsActivity extends AppCompatActivity
         MapUtil.setMapStyling(this, map);
 
         initializeMapClients();
+
+        this.viewModelThing.getAllPointsOfInterest().observe(this, this);
     }
 
     private void initializeMapClients() {
@@ -146,39 +157,77 @@ public class MapsActivity extends AppCompatActivity
         this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
             @Override
             public void onChanged(List<Waypoint> waypoints) {
+                Log.d(TAG, String.valueOf(waypoints.size()));
+
                 //clear map
                 MapUtil.clearMap(map);
 
                 //create lists for data tracking
-                ArrayList<LatLng> locations = new ArrayList<>();
-                ArrayList<Waypoint> nonVistedClonedWaypoints = new ArrayList<>();
+                List<LatLng> locations = new ArrayList<>();
+                List<Waypoint> nonVisitedWaypoints = new ArrayList<>();
+                List<PointOfInterest> nonVisitedPointOfInterests = new ArrayList<>();
 
                 //clone all non visited waypoints
-                for (Waypoint waypoint : waypoints) {
-                    if (!waypoint.isVisited()) {
-                        nonVistedClonedWaypoints.add(waypoint);
+                for (int i = 0; i < MAX_MARKER_VISIBLE; i++) {
+                    if (!waypoints.get(i).isVisited()) {
+                        nonVisitedWaypoints.add(waypoints.get(i));
+                        if (pointOfInterests != null)
+                            nonVisitedPointOfInterests.add(pointOfInterests.get(i));
                     }
                 }
 
+                if (nonVisitedWaypoints.size() == 0)
+                    return;
+
+
                 //get first waypoint
-                Waypoint firstWaypoint = nonVistedClonedWaypoints.get(0);
+                Waypoint firstWaypoint = nonVisitedWaypoints.get(0);
 
                 //create the rest of the polylines
-                while (nonVistedClonedWaypoints.size() != 0) {
+                while (nonVisitedWaypoints.size() != 0) {
 
-                    LatLng newPos = new LatLng(nonVistedClonedWaypoints.get(0).getLat(), nonVistedClonedWaypoints.get(0).getLon());
-                    //checks if waypoint has been visited if not it adds to the draw list
+                    //get LatLng
+                    LatLng newPos = new LatLng(nonVisitedWaypoints.get(0).getLat(), nonVisitedWaypoints.get(0).getLon());
                     locations.add(newPos);
 
-                    //draw marker on map
-                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVistedClonedWaypoints.size(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
+                    //get drawable for marker
+                    Drawable resource = null;
+                    String addres = UUID.randomUUID().toString().substring(0, 10);
+                    if (nonVisitedPointOfInterests.size() != 0) {
+                        try {
+                           String imgUrl = nonVisitedPointOfInterests.get(0).getImgUrls().get(0).replace("static/","");
+                           addres = nonVisitedPointOfInterests.get(0).getAddres();
 
-                    //if it hits the max possible requests
-                    if (locations.size() == 25) {
+                            //get image
+                            InputStream ims = getAssets().open("BWImages/"+ imgUrl);
+                            // load image as Drawable
+                            resource = Drawable.createFromStream(ims, null);
+
+                            //close stream
+                            ims.close();
+
+                        } catch (IOException e){
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+
+                    //draw marker on map
+                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVisitedWaypoints.get(0).getNumber(), addres, MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, resource));
+
+                    //if it hits the max possible requests OR max visible marker
+                    if (locations.size() == 25 && nonVisitedWaypoints.size() >= 25) {
+                        RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                        locations.clear();
+                    } else if (locations.size() == MAX_MARKER_VISIBLE) {
                         RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
                         locations.clear();
                     }
-                    nonVistedClonedWaypoints.remove(nonVistedClonedWaypoints.get(0));
+
+                    nonVisitedWaypoints.remove(nonVisitedWaypoints.get(0));
+
+                    if (nonVisitedPointOfInterests.size() != 0){
+                        nonVisitedPointOfInterests.remove(nonVisitedPointOfInterests.get(0));
+                    }
                 }
 
                 //create current polyline
@@ -236,8 +285,8 @@ public class MapsActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         userLocation = location;
 
-        if(loadingFirstTime){
-            MapUtil.moveCamera(map,MapUtil.getLatLngFromLocation(userLocation));
+        if (loadingFirstTime) {
+            MapUtil.moveCamera(map, MapUtil.getLatLngFromLocation(userLocation));
             loadingFirstTime = false;
         }
     }
@@ -282,5 +331,10 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         //NOT IMPLEMENTED YET AND TESTING PURPOSES
+    }
+
+    @Override
+    public void onChanged(List<PointOfInterest> pointOfInterests) {
+        this.pointOfInterests = new ArrayList<>(pointOfInterests);
     }
 }

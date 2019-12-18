@@ -1,6 +1,9 @@
 package com.example.ti22_a1_mgs.Controllers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,38 +17,71 @@ import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
 
     private List<PointOfInterest> dataSet;
     private Context context;
+    private List<String> images;
 
-    public RouteAdapter(List<PointOfInterest> dataSet, Context context) {
+    public RouteAdapter(List<PointOfInterest> dataSet, Context context) throws IOException {
         this.dataSet = dataSet;
         this.context = context;
+        images = Arrays.asList(context.getAssets().list("BWImages"));
+    }
+
+    public void setDataSet(List<PointOfInterest> dataSet) {
+        this.dataSet = dataSet;
     }
 
     @NonNull
     @Override
     public RouteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RouteViewHolder(LayoutInflater.from(context).inflate(R.layout.route_row,parent,false));
+        return new RouteViewHolder(LayoutInflater.from(context).inflate(R.layout.route_row, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RouteViewHolder holder, int position) {
-        Picasso.get().load(dataSet.get(position).getImgUrls().get(0)).into(holder.icon);
-        //holder.name.setText(dataSet.get(position).);
-        holder.id.setText(dataSet.get(position).getId());
+        if (!dataSet.isEmpty()) {
+            String item = dataSet.get(position).getImgUrls().get(0)
+                    .replace("static/", "")
+                    .replace(".JPG","")
+                    .replace(".PNG","");
+
+            int index = -1;
+            for (int i = 0; i < images.size(); i++) {
+              String img = images.get(i);
+              if (img.contains(item))index = images.indexOf(img);
+            }
+
+
+            if (index <0) Log.d("@d", "onBindViewHolder: " + item);
+            InputStream inputstream = null;
+            try {
+                inputstream = context.getAssets().open("BWImages/"
+                        + images.get(index));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Drawable drawable = Drawable.createFromStream(inputstream, null);
+            holder.icon.setImageDrawable(drawable);
+            holder.name.setText(dataSet.get(position).getAddres());
+            holder.id.setText("id: " + dataSet.get(position).getId());
+        }
     }
 
     @Override
     public int getItemCount() {
-        if(dataSet != null)
         return dataSet.size();
-        else return -1;
     }
-    public class RouteViewHolder extends RecyclerView.ViewHolder{
+
+    public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView icon;
         TextView name;
         TextView id;
@@ -55,6 +91,18 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             this.icon = itemView.findViewById(R.id.imageView_route_icon);
             this.name = itemView.findViewById(R.id.textView_route_name);
             this.id = itemView.findViewById(R.id.textView_route_id);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            int pos = getAdapterPosition();
+            //TODO goto detailed view
+            Intent intent = new Intent( );
+            intent.putExtra("POI",dataSet.get(pos));
+
+        }
+
+
     }
 }

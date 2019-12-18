@@ -50,4 +50,6 @@
     <string name="geofence_transition_invalid_type" translatable="false">Geofencing of wrong type</string>
     <string name="waypoint_visited" translatable="false">You found a waypoint!</string>
     <string name="settings_colorblind_title">ColorBlind Mode</string>
+
+
 </resources>

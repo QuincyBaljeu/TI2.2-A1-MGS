@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.ti22_a1_mgs.Controllers.RouteAdapter;
@@ -18,6 +19,7 @@ import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class RouteActivity extends AppCompatActivity {
     private LiveData<List<PointOfInterest>> allPointsOfInterest;
     private RecyclerView recyclerView;
     private RouteViewModel model;
-    private RecyclerView.Adapter routeAdapter;
+    private RouteAdapter routeAdapter;
     private List<PointOfInterest> dataSet;
 
     @Override
@@ -36,8 +38,19 @@ public class RouteActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.custom_action_bar);
         setSupportActionBar(toolbar);
+        dataSet = new ArrayList<>();
+        recyclerView = findViewById(R.id.location_recyclerview);
 
-        this.dataSet = new ArrayList<>();
+       if (dataSet != null) {
+           try {
+               routeAdapter = new RouteAdapter(dataSet, this);
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(routeAdapter);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -60,18 +73,13 @@ public class RouteActivity extends AppCompatActivity {
         allPointsOfInterest.observe(this, new Observer<List<PointOfInterest>>() {
             @Override
             public void onChanged(List<PointOfInterest> pointOfInterests) {
-                dataSet.addAll(pointOfInterests);
+                if (pointOfInterests.isEmpty()) return;
+                routeAdapter.setDataSet(pointOfInterests);
+                dataSet = pointOfInterests;
                 routeAdapter.notifyDataSetChanged();
+                Log.i("@d", "onChanged: "+ routeAdapter.getItemCount());
             }
         });
-
-        recyclerView = findViewById(R.id.location_recyclerview);
-        routeAdapter = new RouteAdapter(dataSet,this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(routeAdapter);
-
-
-
 
 
     }
