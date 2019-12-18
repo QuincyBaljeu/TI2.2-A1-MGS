@@ -176,6 +176,10 @@ public class MapsActivity extends AppCompatActivity
                     }
                 }
 
+                if (nonVisitedWaypoints.size() == 0)
+                    return;
+
+
                 //get first waypoint
                 Waypoint firstWaypoint = nonVisitedWaypoints.get(0);
 
@@ -220,7 +224,10 @@ public class MapsActivity extends AppCompatActivity
                     }
 
                     nonVisitedWaypoints.remove(nonVisitedWaypoints.get(0));
-                    nonVisitedPointOfInterests.remove(nonVisitedPointOfInterests.get(0));
+
+                    if (nonVisitedPointOfInterests.size() != 0){
+                        nonVisitedPointOfInterests.remove(nonVisitedPointOfInterests.get(0));
+                    }
                 }
 
                 //create current polyline
