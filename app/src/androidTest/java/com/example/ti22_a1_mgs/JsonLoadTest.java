@@ -32,7 +32,8 @@ public class JsonLoadTest {
 
         //Assert
         assert blindWallsBreda != null  &&
-                blindWallsBreda.getAllWalls().get(0).getAddress().equals("Stallingstraat");
+                blindWallsBreda.getAllWalls().get(0).getAddress().equals("Stallingstraat") &&
+                blindWallsBreda.getAllWalls().get(0).getImagesUrls().size() == 6;
 
         //After
 
