@@ -54,6 +54,7 @@ public class RouteViewModel extends AndroidViewModel {
 //            Log.wtf(TAG, "Inserting wall: " + wall.toString());
             repository.insert(new PointOfInterest(
                     wall.getWallId(),
+                    wall.getAddress(),
                     wall.getDescriptionDutch(),
                     wall.getDescriptionEnglish(),
                     (ArrayList<String>) wall.getImagesUrls()));
