@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ti22_a1_mgs.Boundaries.DetailedActivity;
 import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.R;
 import com.squareup.picasso.Picasso;
@@ -72,7 +73,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             Drawable drawable = Drawable.createFromStream(inputstream, null);
             holder.icon.setImageDrawable(drawable);
             holder.name.setText(dataSet.get(position).getAddres());
-            holder.id.setText("id: " + dataSet.get(position).getId());
+            holder.id.setText("Waypoint " + (dataSet.get(position).getId() -1));
         }
     }
 
@@ -96,10 +97,12 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
 
         @Override
         public void onClick(View v) {
-            int pos = getAdapterPosition();
-            //TODO goto detailed view
-            Intent intent = new Intent( );
-            intent.putExtra("POI",dataSet.get(pos));
+            PointOfInterest selectedPoI = dataSet.get(getAdapterPosition());
+
+            Intent intent = new Intent(context, DetailedActivity.class);
+            intent.putExtra("selectedTitle", "Waypoint " + (selectedPoI.getId()-1));
+            intent.putExtra("selectedPoI", selectedPoI);
+            context.startActivity(intent);
 
         }
 

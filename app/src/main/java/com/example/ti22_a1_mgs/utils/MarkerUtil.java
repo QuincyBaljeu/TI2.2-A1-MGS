@@ -23,11 +23,13 @@ import androidx.annotation.DrawableRes;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -46,7 +48,7 @@ public class MarkerUtil {
         googleMap.addMarker(tempMarker);
     }
 
-    public static void addCustomMarker(GoogleMap googleMap, LatLng latLng, String title, String subtitle, Bitmap bitmap) {
+    public static void addCustomMarker(GoogleMap googleMap, LatLng latLng, String title, String subtitle, PointOfInterest pointOfInterestObject, Bitmap bitmap) {
 
         MarkerOptions tempMarker = new MarkerOptions()
                 .position(latLng)
@@ -54,7 +56,8 @@ public class MarkerUtil {
                 .snippet(subtitle)
                 .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 
-        googleMap.addMarker(tempMarker);
+        Marker marker = googleMap.addMarker(tempMarker);
+        marker.setTag(pointOfInterestObject);
     }
 
     public static Bitmap createCustomMarkerBitmap(Context context, Drawable resource) {

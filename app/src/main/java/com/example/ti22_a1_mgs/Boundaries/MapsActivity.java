@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -212,7 +213,7 @@ public class MapsActivity extends AppCompatActivity
                     }
 
                     //draw marker on map
-                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVisitedWaypoints.get(0).getNumber(), addres, MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, resource));
+                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVisitedWaypoints.get(0).getNumber(), addres, nonVisitedPointOfInterests.get(0), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, resource));
 
                     //if it hits the max possible requests OR max visible marker
                     if (locations.size() == 25 && nonVisitedWaypoints.size() >= 25) {
@@ -326,6 +327,11 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onInfoWindowClick(Marker marker) {
         Log.d(TAG, "Clicked on marker: " + marker.getTitle());
+
+        Intent intent = new Intent(this, DetailedActivity.class);
+        intent.putExtra("selectedTitle", marker.getTitle());
+        intent.putExtra("selectedPoI", (PointOfInterest) marker.getTag());
+        this.startActivity(intent);
     }
 
     @Override
