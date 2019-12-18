@@ -19,6 +19,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
+import com.example.ti22_a1_mgs.Database.entities.PointOfInterest;
 import com.example.ti22_a1_mgs.Database.entities.Waypoint;
 import com.example.ti22_a1_mgs.GeoFencing;
 import com.example.ti22_a1_mgs.R;
@@ -157,9 +158,6 @@ public class MapsActivity extends AppCompatActivity
                 //create lists for data tracking
                 ArrayList<LatLng> locations = new ArrayList<>();
                 ArrayList<Waypoint> nonVistedClonedWaypoints = new ArrayList<>();
-
-                //reverse waypoints because its in the wrong order
-                Collections.reverse(waypoints);
 
                 //clone all non visited waypoints
                 for(int i = 0; i < MAX_MARKER_VISIBLE; i++){
