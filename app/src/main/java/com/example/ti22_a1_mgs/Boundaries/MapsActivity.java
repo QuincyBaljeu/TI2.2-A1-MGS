@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,6 +58,8 @@ public class MapsActivity extends AppCompatActivity
         GoogleMap.OnMapLoadedCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
+
+    private static int MAX_MARKER_VISIBLE = 3;
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -146,6 +149,8 @@ public class MapsActivity extends AppCompatActivity
         this.viewModelThing.getAllWayPoints().observe(this, new Observer<List<Waypoint>>() {
             @Override
             public void onChanged(List<Waypoint> waypoints) {
+                Log.d(TAG, String.valueOf(waypoints.size()));
+
                 //clear map
                 MapUtil.clearMap(map);
 
@@ -153,11 +158,13 @@ public class MapsActivity extends AppCompatActivity
                 ArrayList<LatLng> locations = new ArrayList<>();
                 ArrayList<Waypoint> nonVistedClonedWaypoints = new ArrayList<>();
 
+                //reverse waypoints because its in the wrong order
+                Collections.reverse(waypoints);
+
                 //clone all non visited waypoints
-                for (Waypoint waypoint : waypoints) {
-//                    Log.wtf(TAG, waypoint.toString());
-                    if (!waypoint.isVisited()) {
-                        nonVistedClonedWaypoints.add(waypoint);
+                for(int i = 0; i < MAX_MARKER_VISIBLE; i++){
+                    if (!waypoints.get(i).isVisited()) {
+                        nonVistedClonedWaypoints.add(waypoints.get(i));
                     }
                 }
 
@@ -175,13 +182,17 @@ public class MapsActivity extends AppCompatActivity
                     locations.add(newPos);
 
                     //draw marker on map
-                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVistedClonedWaypoints.size(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
+                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVistedClonedWaypoints.get(0).getNumber(), UUID.randomUUID().toString().substring(0, 10), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, R.drawable.blindwalls_icon));
 
-                    //if it hits the max possible requests
-                    if (locations.size() == 25) {
+                    //if it hits the max possible requests OR max visible marker
+                    if (locations.size() == 25 && nonVistedClonedWaypoints.size() >= 25) {
+                        RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                        locations.clear();
+                    } else if (locations.size() == MAX_MARKER_VISIBLE) {
                         RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
                         locations.clear();
                     }
+
                     nonVistedClonedWaypoints.remove(nonVistedClonedWaypoints.get(0));
                 }
 
