@@ -25,7 +25,7 @@ public interface PointOfInterestDao {
     @Query("DELETE FROM point_of_interest_table")
     void deleteAllPointsOfInterest();
 
-    @Query("SELECT * FROM point_of_interest_table ORDER BY id DESC")
+    @Query("SELECT * FROM point_of_interest_table ORDER BY id ASC")
     LiveData<List<PointOfInterest>> getAllPointsOfInterest();
 
     @Query("SELECT * FROM point_of_interest_table WHERE id=:locationId")
