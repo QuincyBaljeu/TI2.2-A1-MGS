@@ -166,9 +166,6 @@ public class MapsActivity extends AppCompatActivity
                     }
                 }
 
-                if (nonVistedClonedWaypoints.isEmpty())
-                    return;
-
                 //get first waypoint
                 Waypoint firstWaypoint = nonVistedClonedWaypoints.get(0);
 
