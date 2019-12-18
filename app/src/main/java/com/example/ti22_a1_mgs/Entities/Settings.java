@@ -7,11 +7,13 @@ public class Settings {
     private String language;
     private boolean colorblindMode;
     private boolean satelliteMode;
+    private boolean markerMode;
 
     public Settings(){
         this.language = "ENGLISH";
         this.colorblindMode = false;
         this.satelliteMode = false;
+        this.markerMode = false;
     }
 
 
@@ -37,5 +39,13 @@ public class Settings {
 
     public void setSatelliteMode(boolean satelliteMode) {
         this.satelliteMode = satelliteMode;
+    }
+
+    public boolean isMarkerMode() {
+        return markerMode;
+    }
+
+    public void setMarkerMode(boolean markerMode) {
+        this.markerMode = markerMode;
     }
 }

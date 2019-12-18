@@ -32,6 +32,7 @@ import com.example.ti22_a1_mgs.utils.MarkerUtil;
 import com.example.ti22_a1_mgs.utils.PopupUtil;
 
 import com.example.ti22_a1_mgs.utils.RouteUtil;
+import com.example.ti22_a1_mgs.utils.SharedPreferenceManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -65,7 +66,7 @@ public class MapsActivity extends AppCompatActivity
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
-    private static int MAX_MARKER_VISIBLE = 3;
+    private static int MAX_MARKER_VISIBLE = 5;
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -168,8 +169,18 @@ public class MapsActivity extends AppCompatActivity
                 List<Waypoint> nonVisitedWaypoints = new ArrayList<>();
                 List<PointOfInterest> nonVisitedPointOfInterests = new ArrayList<>();
 
+                //settings are all markers visible
+                SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(getApplicationContext());
+                int waypointCount;
+
+                if (sharedPreferenceManager.loadBoolPreference("WAYPOINTMODE",false)){
+                    waypointCount = waypoints.size();
+                } else {
+                    waypointCount = MAX_MARKER_VISIBLE;
+                }
+
                 //clone all non visited waypoints
-                for (int i = 0; i < MAX_MARKER_VISIBLE; i++) {
+                for (int i = 0; i < waypointCount; i++) {
                     if (!waypoints.get(i).isVisited()) {
                         nonVisitedWaypoints.add(waypoints.get(i));
                         if (pointOfInterests != null)
@@ -179,7 +190,6 @@ public class MapsActivity extends AppCompatActivity
 
                 if (nonVisitedWaypoints.size() == 0)
                     return;
-
 
                 //get first waypoint
                 Waypoint firstWaypoint = nonVisitedWaypoints.get(0);

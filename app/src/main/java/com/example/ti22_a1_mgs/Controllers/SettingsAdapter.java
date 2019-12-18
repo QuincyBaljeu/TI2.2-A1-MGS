@@ -36,6 +36,11 @@ public class SettingsAdapter {
         sharedPreferenceManager.savePreference("COLORBLINDMODE", toggle, SharedPreferenceManager.Type.BOOL);
     }
 
+    public void setAllWaypointsVisible(boolean toggle){
+        this.settings.setMarkerMode(toggle);
+        sharedPreferenceManager.savePreference("WAYPOINTMODE", toggle, SharedPreferenceManager.Type.BOOL);
+    }
+
     public Settings getSettings(){
         return this.settings;
     }

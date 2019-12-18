@@ -13,5 +13,10 @@
         android:title="@string/settings_colorblind_title"
         android:defaultValue="false"/>
 
+    <CheckBoxPreference
+        android:key="@string/settings_all_waypoints_visible_id"
+        android:title="@string/settings_all_waypoints_visible_title"
+        android:defaultValue="false"/>
+
 
 </PreferenceScreen>

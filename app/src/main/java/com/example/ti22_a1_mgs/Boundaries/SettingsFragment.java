@@ -67,6 +67,19 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        Preference allWaypointsVisiblePreference = findPreference(getResources().getString(R.string.settings_all_waypoints_visible_id));
+        allWaypointsVisiblePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean toggle = Boolean.valueOf(newValue.toString());
+                settingsAdapter.setAllWaypointsVisible(toggle);
+                Log.d("@/Class", String.valueOf(settingsAdapter.getSettings().isMarkerMode()));
+                Log.d("@/SharedPreference", String.valueOf(sharedPreferenceManager.loadBoolPreference("WAYPOINTMODE", true)));
+
+                return true;
+            }
+        });
     }
 
 }
