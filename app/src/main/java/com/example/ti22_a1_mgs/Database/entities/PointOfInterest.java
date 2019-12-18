@@ -5,11 +5,12 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity(tableName = "point_of_interest_table"
         , indices = {@Index("id")})
-public class PointOfInterest {
+public class PointOfInterest implements Serializable {
 
     @PrimaryKey @NonNull
     private int id;
