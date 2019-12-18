@@ -1,9 +1,11 @@
 package com.example.ti22_a1_mgs.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
+import com.example.ti22_a1_mgs.Boundaries.MapsActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.UiSettings;
@@ -16,9 +18,16 @@ public class MapUtil {
 
     private static final float DEFAULT_CAMERA_ZOOM = 15.0f;
 
-    public static void setMapStyling(Activity activity, GoogleMap googleMap) {
+
+
+    public static void setMapStyling(Activity activity, GoogleMap googleMap, Context context) {
         //standard
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(context);
+        if(sharedPreferenceManager.loadBoolPreference("SATELLITEMODE", false)){
+            googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        }else {
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
 
 //        //custom
 //        try {
