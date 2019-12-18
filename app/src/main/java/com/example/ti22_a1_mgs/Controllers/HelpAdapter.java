@@ -1,6 +1,7 @@
 package com.example.ti22_a1_mgs.Controllers;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.example.ti22_a1_mgs.Entities.HelpData;
 import com.example.ti22_a1_mgs.utils.SharedPreferenceManager;
@@ -27,7 +28,14 @@ public class HelpAdapter {
             default:
                 return HelpData.getHelpTextEnglish();
         }
+    }
 
+    public int getColor(){
+        if(sharedPreferenceManager.loadBoolPreference("COLORBLINDMODE", false)){
+            return Color.BLACK;
+        }else {
+            return Color.BLUE;
+        }
     }
 
 

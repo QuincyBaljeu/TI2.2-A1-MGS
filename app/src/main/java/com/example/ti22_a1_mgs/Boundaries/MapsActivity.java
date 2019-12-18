@@ -75,6 +75,8 @@ public class MapsActivity extends AppCompatActivity
 
     private RouteViewModel viewModelThing;
 
+    private SharedPreferenceManager sharedPreferenceManager;
+
     private boolean loadingFirstTime = true;
     private List<PointOfInterest> pointOfInterests;
 
@@ -82,6 +84,8 @@ public class MapsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        sharedPreferenceManager = new SharedPreferenceManager(this.getBaseContext());
 
         Toolbar toolbar = findViewById(R.id.custom_action_bar);
         setSupportActionBar(toolbar);
@@ -128,7 +132,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        MapUtil.setMapStyling(this, map);
+        MapUtil.setMapStyling(this, map, this.getBaseContext());
 
         initializeMapClients();
 
