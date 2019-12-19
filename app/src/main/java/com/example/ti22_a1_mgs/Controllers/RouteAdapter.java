@@ -41,6 +41,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         this.dataSet = dataSet;
     }
 
+    public List<PointOfInterest> getDataSet() {
+        return dataSet;
+    }
+
     @NonNull
     @Override
     public RouteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
