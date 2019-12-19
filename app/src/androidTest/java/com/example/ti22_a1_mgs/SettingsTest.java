@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.ti22_a1_mgs.Controllers.SettingsAdapter;
+import com.example.ti22_a1_mgs.utils.SharedPreferenceManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,16 +52,20 @@ public class SettingsTest {
 
     @Test
     public void sharedPreferenceColorBlindTest(){
-        /** IMPORTANT. RUN THIS TEST AFTER UNIT TEST 1 */
-
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         //create adapter
         SettingsAdapter settingsAdapter = new SettingsAdapter(appContext);
 
+        //setColorblind
+        settingsAdapter.setColorblind(true);
+
+        //create SharedPreferenceManager
+        SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(appContext);
+
         //test
-        assertEquals(true, settingsAdapter.getSettings().isSatelliteMode());
+        assertEquals(true, sharedPreferenceManager.loadBoolPreference("COLORBLINDMODE", false));
 
 
     }
