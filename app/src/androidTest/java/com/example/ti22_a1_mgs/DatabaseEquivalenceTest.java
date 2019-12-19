@@ -1,3 +1,4 @@
+/*
 package com.example.ti22_a1_mgs;
 
 import android.app.Application;
@@ -20,7 +21,8 @@ import java.util.List;
 
 public class DatabaseEquivalenceTest   {
     //Todo: Change Database to use Context, not Application in main app
-/*
+
+
 
 
     @Test
@@ -44,9 +46,13 @@ public class DatabaseEquivalenceTest   {
                 list2.getValue().contains(newWaypoint);
 
         //After
-*/
+
+
 
 
 
     }
+
+
 }
+*/
