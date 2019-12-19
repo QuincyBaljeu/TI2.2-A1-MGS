@@ -26,7 +26,6 @@ public class JsonLoadTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         //Setup
-
         String json = JsonUtil.loadJSONFromAsset(appContext.getApplicationContext());
         BlindWallsBreda blindWallsBreda = BlindWallsBreda.createFromJson(json);
 
