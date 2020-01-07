@@ -20,7 +20,10 @@ public class RouteUtil {
     private static List<Polyline> polylines = new ArrayList<>();
 
     public static synchronized void routingWaypointRequest(Context context, LatLng start, LatLng end, CustomRoutingListener routingListener) {
-        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
+//        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
+        String key = "b9b76fa5-992f-4271-bdb3-3a5e2ebc0bf3";
+
+        Log.d(TAG, "Request started single");
 
         CustomRouting routing = new CustomRouting.Builder()
                 .travelMode(CustomRouting.TravelMode.WALKING)
@@ -35,7 +38,10 @@ public class RouteUtil {
     }
 
     public static synchronized void routingWaypointsRequest(Context context, List<LatLng> waypointList, CustomRoutingListener routingListener) {
-        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
+//        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
+        String key = "b9b76fa5-992f-4271-bdb3-3a5e2ebc0bf3";
+
+        Log.d(TAG, "Request started multiple");
 
         CustomRouting routing = new CustomRouting.Builder()
                 .travelMode(CustomRouting.TravelMode.WALKING)

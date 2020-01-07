@@ -169,15 +169,15 @@ public class MapsActivity extends AppCompatActivity
                 MapUtil.clearMap(map);
 
                 //create lists for data tracking
-                List<LatLng> locations = new ArrayList<>();
                 List<Waypoint> nonVisitedWaypoints = new ArrayList<>();
+                List<LatLng> locations = new ArrayList<>();
                 List<PointOfInterest> nonVisitedPointOfInterests = new ArrayList<>();
 
                 //settings are all markers visible
                 SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(getApplicationContext());
                 int waypointCount;
 
-                if (sharedPreferenceManager.loadBoolPreference("WAYPOINTMODE",false)){
+                if (sharedPreferenceManager.loadBoolPreference("WAYPOINTMODE", false)) {
                     waypointCount = waypoints.size();
                 } else {
                     waypointCount = MAX_MARKER_VISIBLE;
@@ -210,18 +210,18 @@ public class MapsActivity extends AppCompatActivity
                     String addres = UUID.randomUUID().toString().substring(0, 10);
                     if (nonVisitedPointOfInterests.size() != 0) {
                         try {
-                           String imgUrl = nonVisitedPointOfInterests.get(0).getImgUrls().get(0).replace("static/","");
-                           addres = nonVisitedPointOfInterests.get(0).getAddres();
+                            String imgUrl = nonVisitedPointOfInterests.get(0).getImgUrls().get(0).replace("static/", "");
+                            addres = nonVisitedPointOfInterests.get(0).getAddres();
 
                             //get image
-                            InputStream ims = getAssets().open("BWImages/"+ imgUrl);
+                            InputStream ims = getAssets().open("BWImages/" + imgUrl);
                             // load image as Drawable
                             resource = Drawable.createFromStream(ims, null);
 
                             //close stream
                             ims.close();
 
-                        } catch (IOException e){
+                        } catch (IOException e) {
                             Log.e(TAG, e.getMessage());
                         }
                     }
@@ -229,25 +229,41 @@ public class MapsActivity extends AppCompatActivity
                     //draw marker on map
                     MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVisitedWaypoints.get(0).getNumber(), addres, nonVisitedPointOfInterests.get(0), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, resource));
 
+                    //check if there is a list
+                    if (routeBackupList == null)
+                        routeBackupList  = new ArrayList<>();
+
                     //if it hits the max possible requests OR max visible marker
-                    if (locations.size() == 25 && nonVisitedWaypoints.size() >= 25) {
-                        RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
-                        locations.clear();
+                    if (locations.size() == 5) {
+                        if (routeBackupList.size() == 0) {
+                            RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
+                        } else {
+                            onRoutingSuccess(routeBackupList,0,true); //get already request route
+                        }
                     } else if (locations.size() == MAX_MARKER_VISIBLE) {
                         RouteUtil.routingWaypointsRequest(getApplicationContext(), locations, listener);
-                        locations.clear();
+//                        locations.clear();
+
                     }
 
                     nonVisitedWaypoints.remove(nonVisitedWaypoints.get(0));
 
-                    if (nonVisitedPointOfInterests.size() != 0){
+                    if (nonVisitedPointOfInterests.size() != 0) {
                         nonVisitedPointOfInterests.remove(nonVisitedPointOfInterests.get(0));
                     }
                 }
 
                 //create current polyline
                 if (userLocation != null && firstWaypoint != null && !firstWaypoint.isVisited())
-                    RouteUtil.routingWaypointRequest(getApplicationContext(), MapUtil.getLatLngFromLocation(userLocation), new LatLng(firstWaypoint.getLat(), firstWaypoint.getLon()), listener);
+                    RouteUtil.routingWaypointRequest(
+
+                            getApplicationContext(), MapUtil.
+
+                                    getLatLngFromLocation(userLocation), new
+
+                                    LatLng(firstWaypoint.getLat(), firstWaypoint.
+
+                                    getLon()), listener);
             }
         });
     }
@@ -306,6 +322,8 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
+    private static ArrayList<Route> routeBackupList;
+
     @Override
     public void onRoutingSuccess(ArrayList<Route> routeArrayList, int shortestRouteIndex, boolean isMultiple) {
         Log.d(TAG, "CustomRouting succes!");
@@ -314,6 +332,7 @@ public class MapsActivity extends AppCompatActivity
 
         if (isMultiple) {
             polyOptions.color(ContextCompat.getColor(this, R.color.routeColor));
+            routeBackupList = routeArrayList;
         } else {
             polyOptions.color(ContextCompat.getColor(this, R.color.routeCurrentColor));
         }
