@@ -2,20 +2,17 @@ package com.example.ti22_a1_mgs.Entities;
 
 public class HelpData {
 
-    public static final String helpTextNederlands = "Selecteer het route menu \n" +
-            "Selecteer een route uit de lijst \n" +
-            "Open het kaart menu \n" +
-            "Volg de route";
+    public static final String helpTextNederlands = "Kaart \nMap with route shown \n \n" +
+            "Instellingen \nApp Instellingen\n \n" +
+            "Locaties \nLijst met alle beschikbare bezienswaardigheden \n \n";
 
-    public static final String helpTextEnglish = "Select the routes menu \n" +
-            "Select a route from the list \n" +
-            "Open the map menu \n" +
-            "Follow the given route!";
+    public static final String helpTextEnglish = "Map \nMap with route shown \n \n" +
+            "Settings \nApp settings \n \n" +
+            "Locations \nList with all available points of interest \n \n";
 
-    public static final String helpTextDeutsch = "Wählen Sie das Routenmenü \n" +
-            "Wählen Sie eine Route aus der Liste aus \n" +
-            "Öffnen Sie das Kartenmenü \n" +
-            "Folgen Sie der Route";
+    public static final String helpTextDeutsch = "Karte \nKarte mit Route angezeigt\n \n" +
+            "Einstellungen \nApp Einstellungen \n \n" +
+            "Standorte \nListe mit allen verfügbaren Sonderzielen\n \n";
 
     public static String getHelpTextNederlands() {
         return helpTextNederlands;
