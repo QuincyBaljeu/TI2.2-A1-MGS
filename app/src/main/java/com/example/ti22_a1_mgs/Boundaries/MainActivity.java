@@ -7,17 +7,20 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 
-import com.example.ti22_a1_mgs.Database.Reposetory;
 import com.example.ti22_a1_mgs.Database.RouteViewModel;
 import com.example.ti22_a1_mgs.Database.blindwalls.BlindWallsBreda;
 import com.example.ti22_a1_mgs.Database.blindwalls.JsonUtil;
 import com.example.ti22_a1_mgs.R;
+import com.example.ti22_a1_mgs.utils.NetworkCheckerUtil;
+import com.example.ti22_a1_mgs.utils.PopupUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
@@ -98,5 +101,22 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //check network connection
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (!NetworkCheckerUtil.isNetworkConnected(connectivityManager)){
+             //false == no network found
+            PopupUtil.showAlertDialog(this, "You are not connected to the internet!", "To access all features of this app you need to turn on you wifi or mobile data.", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //nothing implemented
+                }
+            });
+        }
     }
 }
