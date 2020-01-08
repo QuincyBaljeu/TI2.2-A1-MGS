@@ -309,7 +309,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onMapLoaded() {
         drawRoute(this);
-        updateGeofencing();
+//        updateGeofencing();
     }
 
     @Override

@@ -17,11 +17,8 @@ public class RouteUtil {
 
     private static final String TAG = RouteUtil.class.getSimpleName();
 
-    private static List<Polyline> polylines = new ArrayList<>();
-
     public static synchronized void routingWaypointRequest(Context context, LatLng start, LatLng end, CustomRoutingListener routingListener) {
-//        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
-        String key = "b9b76fa5-992f-4271-bdb3-3a5e2ebc0bf3";
+        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
 
         Log.d(TAG, "Request started single");
 
@@ -38,8 +35,7 @@ public class RouteUtil {
     }
 
     public static synchronized void routingWaypointsRequest(Context context, List<LatLng> waypointList, CustomRoutingListener routingListener) {
-//        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
-        String key = "b9b76fa5-992f-4271-bdb3-3a5e2ebc0bf3";
+        String key = context.getResources().getString(R.string.MGS_API_MAPS_DIRECTIONS_KEY);
 
         Log.d(TAG, "Request started multiple");
 
