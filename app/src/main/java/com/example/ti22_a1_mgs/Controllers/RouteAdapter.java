@@ -77,7 +77,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             Drawable drawable = Drawable.createFromStream(inputstream, null);
             holder.icon.setImageDrawable(drawable);
             holder.name.setText(dataSet.get(position).getAddres());
-            holder.id.setText("Waypoint " + (dataSet.get(position).getId() -1));
+            holder.id.setText("Waypoint " + (dataSet.get(position).getId()));
         }
     }
 
@@ -104,7 +104,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             PointOfInterest selectedPoI = dataSet.get(getAdapterPosition());
 
             Intent intent = new Intent(context, DetailedActivity.class);
-            intent.putExtra("selectedTitle", "Waypoint " + (selectedPoI.getId()-1));
+            intent.putExtra("selectedTitle", "Waypoint " + (selectedPoI.getId()));
             intent.putExtra("selectedPoI", selectedPoI);
             context.startActivity(intent);
 

@@ -227,7 +227,7 @@ public class MapsActivity extends AppCompatActivity
                     }
 
                     //draw marker on map
-                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + nonVisitedWaypoints.get(0).getNumber(), addres, nonVisitedPointOfInterests.get(0), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, resource));
+                    MarkerUtil.addCustomMarker(map, newPos, "Waypoint " + (nonVisitedWaypoints.get(0).getNumber() + 1), addres, nonVisitedPointOfInterests.get(0), MarkerUtil.createCustomMarkerBitmap(MapsActivity.this, resource));
 
                     //check if there is a list
                     if (routeBackupList == null)
